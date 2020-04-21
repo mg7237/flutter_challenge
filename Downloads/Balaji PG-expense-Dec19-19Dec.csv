@@ -1,0 +1,16 @@
+Expense Type,Expense Amount,Paid On,Paid By,Vendor Name,Invoice Date,Invoice Number,Vendor GST,GST Amount,Month,Remarks
+Electricity,32336,02-Dec-19,EASYLEASES,BESCOM,,5837187806,,,Nov-19,
+Housekeeping Staff,9500,30-Nov-19,EASYLEASES,HOUSEKEEPING,,,,,Nov-19,
+Meat,10375,,EASYLEASES,OTHERS,,1-15 DEC,,,Dec-19,
+Veggie,5862,,EASYLEASES,OTHERS,,1-15 DEC,,,Dec-19,
+LPG,10980,,PG Operator,INDANE,,1-15 DEC,,,Dec-19,
+Grocery,1800,,EASYLEASES,OTHERS,,1-15 DEC,,,Dec-19,
+Others,1400,,EASYLEASES,OTHERS,,1-15 DEC,,,Dec-19,
+Maintenance,8012,,EASYLEASES,OTHERS,,1-15 DEC,,,Dec-19,
+Wifi,14134,,EASYLEASES,AIRTEL,,1-15 DEC,,,Nov-19,
+Electricity,124460,13-Dec,EASYLEASES,BESCOM,,03-Dec,,,Nov-19,
+BBMP,3000,,PG Operator,BBMP,,07-Dec,,,Dec-19,
+Housekeeping Staff,10000,11-Dec,PG Operator,HOUSEKEEPING,,10-Dec,,,Nov-19,
+Housekeeping Staff,20500,,EASYLEASES,HOUSEKEEPING,,,,,Nov-19,
+Others,15500,,EASYLEASES,,,,,,Nov-19,Salary Others
+Wifi,12170,,EASYLEASES,,,,,,Nov-19,Paid by guest

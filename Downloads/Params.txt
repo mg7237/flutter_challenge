@@ -1,0 +1,59 @@
+Params
+
+
+'hash_key' => 'HHJKHHB456s7dfg9sda8f766df7s',
+    'adminEmail' => 'eladmin@easyleases.in',
+    'queryEmail' => 'query@easyleases.in',
+    'supportEmail' => 'support@easyleases.in',
+    'docEmail' => 'support@easyleases.in',
+    'sms_api_key' => 'rdQqJkW5K+U-5dVLfp2gx8VsFIhAX9Fa502hHiVpmZ',
+    'sender' => 'ELTECH',
+    'send_sms_url' => 'https://api.textlocal.in/send/',
+    'sms_template_url' => 'https://api.textlocal.in/get_templates/',
+    'head_title' => 'Property Management | Property Management Services Bangalore',
+    'penalty_waiver' => 5,
+
+    /****************   PAYTM PARAMS STARTS HERE    ***************/
+    'paytm_env' => 'prod',
+    'paytm_merchant_id' => 'Easyle51058358131598',
+    'paytm_merchant_key' => 'pQ3d_gNB4!rDRA7k',
+    'paytm_merchant_website' => 'WEBPROD',
+    'paytm_channel_id' => 'WEB',
+    'paytm_industry_type_id' => 'ECommerce',
+    'paytm_txn_api_dev' => 'https://securegw-stage.paytm.in/theia/processTransaction',
+    'paytm_txn_api_prod' => 'https://securegw.paytm.in/theia/processTransaction',
+    'paytm_txn_status_dev' => 'https://securegw-stage.paytm.in/merchant-status/getTxnStatus',
+    'paytm_txn_status_prod' => 'https://securegw.paytm.in/order/status',
+    'paytm_refund_api_dev' => 'https://securegw.paytm.in/merchant-status/getTxnStatus',
+    'paytm_refund_api_prod' => 'https://securegw.paytm.in/merchant-status/getTxnStatus',
+    /****************   PAYTM PARAMS ENDS HERE   *******************/
+
+   /****************   PAYTM NETBANKING PARAMS STARTS HERE    ***************/
+    'paytm_netbanking_env' => 'prod',
+    'paytm_netbanking_merchant_id' => 'Easyle77148570382409',
+    'paytm_netbanking_merchant_key' => 'YtW&mpwcXZfXuHTN',
+    'paytm_netbanking_merchant_website' => 'WEBPROD',
+    'paytm_netbanking_channel_id' => 'WEB',
+    'paytm_netbanking_industry_type_id' => 'ECommerce',
+    'paytm_netbanking_txn_api_dev' => 'https://securegw-stage.paytm.in/theia/processTransaction',
+    'paytm_netbanking_txn_api_prod' => 'https://securegw.paytm.in/theia/processTransaction',
+    'paytm_netbanking_txn_status_dev' => 'https://securegw-stage.paytm.in/merchant-status/getTxnStatus',
+    'paytm_netbanking_txn_status_prod' => 'https://securegw.paytm.in/order/status',
+    'paytm_netbanking_refund_api_dev' => 'https://securegw.paytm.in/merchant-status/getTxnStatus',
+    'paytm_netbanking_refund_api_prod' => 'https://securegw.paytm.in/merchant-status/getTxnStatus',
+    /****************   PAYTM NETBANKING PARAMS ENDS HERE   ******************/
+
+    /****************   TENANT APP REST PARAMS STARTS HERE ******************/
+    'play_store_url' => 'https://play.google.com/store/apps/details?id=com.easyleases.app',
+    'app_store_url' => 'https://apps.apple.com/us/app/easyleases-tenant/id1474443593?ls=1',
+    'APPID_ARR' => ['ELTENANTAPPV1', 'ELOPSAPPV1'],
+    'APPID' => 'ELTENANTAPPV1',
+    'PG_OPS_APPID' => 'ELOPSAPPV1',
+    'fcm_url' => 'https://fcm.googleapis.com/fcm/send',
+    'fcm_server_key' => 'AAAACjwCzjY:APA91bEn2PzBWOxrq9GpdMlt0u8bw_o4IT5VospSqdK1-45BEvP9lOsUtnQWKVB4L6f2xC2C13cFX0mrjOTICEAIlDmMLrvw3tw4qWvqr9csiz7gwdUPwZly56LFegTED4rXZbmWWsy-'
+    /****************   TENANT APP REST PARAMS ENDS HERE   ******************/
+
+
+
+
+

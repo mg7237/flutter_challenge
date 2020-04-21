@@ -1,0 +1,13 @@
+,SELECT * FROM `favourite_properties` WHERE applicant_id like 'mosh%' or property_id = 39,,,,,,,,,(,,
+Before,-,Refer BackUp Table favourite_properties_bk1104',,,,,,,,,,
+,,,,,,,,,,,,
+19,39,10,rrakapali@gmail.com,2,NULL,25/09/19 14:54,2,NULL,NULL,3,0,0
+24,39,39,adititripathi511@gmail.com,6,NULL,03/01/20 12:38,1,NULL,NULL,3,0,0
+28,38,38,mosh4aash@gmail.com,6,NULL,08/01/20 17:15,1,NULL,NULL,3,0,0
+29,38,38,mosh4aash@gmail.com,6,NULL,08/01/20 17:16,1,NULL,NULL,3,0,0
+51,39,39,mosh4aash@gmail.comZ,2,NULL,11/04/20 13:28,1,NULL,NULL,3,0,0
+,,,,,,,,,,,,
+After setting lease - Following rows remain in favourite table,,,,,,,,,,,,
+19,39,10,rrakapali@gmail.com,2,NULL,25/09/19 14:54,2,NULL,NULL,3,0,0
+28,38,38,mosh4aash@gmail.com,6,NULL,08/01/20 17:15,1,NULL,NULL,3,0,0
+29,38,38,mosh4aash@gmail.com,6,NULL,08/01/20 17:16,1,NULL,NULL,3,0,0
