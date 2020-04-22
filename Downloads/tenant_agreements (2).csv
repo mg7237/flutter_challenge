@@ -1,7 +1,0 @@
-nitinsood1975@gmail.com,riddhichakrabarty@gmail.com,drtvreddy@yahoo.com,taniachakravorty@gmail.com,abhisek.dixit@gmail.com,sk0871@hotmail.com,rajeevkthakur@gmail.com,karsun@gmail.com,laxshminarayanan@gmail.com,milredroyan@hotmail.com,karsun@gmail.com,rajmadan@gmail.com,vyoma14@gmail.com,syedaatifa@gmail.com,arun.live360@gmail.com,jayadebaj@gmail.com,raghavendrahosmar@gmail.com,vdwarakanath@gmail.com,saravanamp@gmail.com,geethasanjeev50@yahoo.com,debi.rajguru@hotmail.com,rajul.agrawal@gmail.com,chinmaypj@gmail.com,olympria@gmail.com,pratsarora@gmail.com,shweta.ise@gmail.com,krishnakumar340@gmail.com,veen.kal@gmail.com,vyoma14@gmail.com,rajgopal.dora@gmail.com
-
----
-lease_start_date < <today> and (lease_end_date is null or lease_end_date > <today>)
-
---
-SELECT * FROM `tenant_agreements` WHERE  (lease_start_date < '2020-03-09' AND property_type = 5) AND (lease_end_date >= '2020-03-09' OR  lease_end_date is NULL )

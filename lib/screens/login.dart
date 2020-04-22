@@ -110,6 +110,7 @@ class _LoginState extends State<Login> {
                                 content:
                                     Text('You have been registered with us'));
                           } else {
+                            //
                             AlertDialog(
                                 title: Text('Failed'),
                                 content: Text('User registered successfully'));
