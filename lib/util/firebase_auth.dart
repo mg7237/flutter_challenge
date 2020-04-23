@@ -4,7 +4,18 @@ class FireBaseOps {
   //final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  validateUserExists() {}
+  Future<bool> validateUserCredentials(String email, String password) async {
+    try {
+      AuthResult result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      FirebaseUser user = result.user;
+      return user != null ? true : false;
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
 
   Future createUser(String email, String password) async {
     try {
@@ -17,6 +28,4 @@ class FireBaseOps {
       return e;
     }
   }
-
-  validateUserPassword() {}
 }
