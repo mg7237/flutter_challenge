@@ -15,6 +15,7 @@ class _LoginState extends State<Login> {
   final _pwd = TextEditingController();
   bool _validate = true;
   bool _pwdValidate = true;
+  bool _rememberMe = false;
   final FireBaseOps _auth = new FireBaseOps();
   AlertDialogs alertDialog;
   String userResponse;
@@ -33,7 +34,7 @@ class _LoginState extends State<Login> {
         body: SingleChildScrollView(
           child: Column(children: <Widget>[
             Container(
-              height: MediaQuery.of(context).size.height / 2.5,
+              height: MediaQuery.of(context).size.height / 3,
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Colors.grey[300],
@@ -42,55 +43,66 @@ class _LoginState extends State<Login> {
                       image: AssetImage("images/background_image.png"))),
             ),
             Container(
-                height: 450,
-                margin: EdgeInsets.all(30),
+                color: Colors.white,
+                height: MediaQuery.of(context).size.height * 2 / 3,
+                margin: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                 child: ListView(children: <Widget>[
-                  SizedBox(height: 10),
                   Hero(
                       tag: 'logo',
-                      child: Image.asset('images/MG_Logo.png', height: 50)),
+                      child: Image.asset('images/MG_Logo.png', height: 80)),
                   SizedBox(height: 10),
                   Text(
                     'Email',
                     style: k_LabelTextStyle,
                   ),
+                  TextField(
+                      controller: _text,
+                      style: k_CommonTextStyle,
+                      textInputAction: TextInputAction.next,
+                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      decoration: InputDecoration(
+                          border: UnderlineInputBorder(),
+                          errorText: _validate ? null : 'Invalid email id',
+                          hintText: 'Enter your email id',
+                          hintStyle: TextStyle(fontSize: 15))),
                   SizedBox(
-                    height: 80,
-                    width: 300,
-                    child: TextField(
-                        controller: _text,
-                        style: k_CommonTextStyle,
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                        decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            errorText: _validate ? null : 'Invalid email id',
-                            hintText: 'Enter your email id',
-                            hintStyle: TextStyle(fontSize: 20))),
+                    height: 25,
                   ),
                   Text(
                     'Password',
                     style: k_LabelTextStyle,
                   ),
+                  TextField(
+                      controller: _pwd,
+                      style: k_CommonTextStyle,
+                      obscureText: true,
+                      textInputAction: TextInputAction.next,
+                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      decoration: InputDecoration(
+                          errorText: _pwdValidate
+                              ? null
+                              : 'Password must be more than 5 charcters',
+                          border: UnderlineInputBorder(),
+                          hintText: 'Enter your password',
+                          hintStyle: TextStyle(fontSize: 15))),
                   SizedBox(
-                    height: 80,
-                    width: 350,
-                    child: TextField(
-                        controller: _pwd,
-                        style: k_CommonTextStyle,
-                        obscureText: true,
-                        textInputAction: TextInputAction.next,
-                        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                        decoration: InputDecoration(
-                            errorText: _pwdValidate
-                                ? null
-                                : 'Password must be more than 5 charcters',
-                            border: UnderlineInputBorder(),
-                            hintText: 'Enter your password',
-                            hintStyle: TextStyle(fontSize: 20))),
+                    height: 25,
+                  ),
+                  Row(
+                    children: [
+                      Text('Remember Me?'),
+                      Checkbox(
+                        tristate: false,
+                        value: _rememberMe,
+                        onChanged: (newValue) {
+                          _rememberMe = newValue;
+                          setState(() {});
+                        },
+                      ),
+                    ],
                   ),
                   SizedBox(
-                    height: 30,
+                    height: 25,
                   ),
                   RaisedButton(
                       padding:
@@ -135,7 +147,7 @@ class _LoginState extends State<Login> {
                             alertDialog = new AlertDialogs(
                                 title: 'Authentication Failed',
                                 message:
-                                    'Unable to login using email id / password provided. If this is the first time you are trying to log in then, click OK to signup using the preovided email id. Else Cancel to re-enter correct email and password.');
+                                    'Unable to login using credentials provided. Click OK to signup using the provided email id; else Cancel to re-enter correct email and password.');
                             userResponse =
                                 await alertDialog.asyncConfirmDialog(context);
 
@@ -148,7 +160,7 @@ class _LoginState extends State<Login> {
                                     title: 'Success',
                                     message:
                                         'You have been registered with us');
-                                alertDialog.asyncAckAlert(context);
+                                await alertDialog.asyncAckAlert(context);
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -165,7 +177,6 @@ class _LoginState extends State<Login> {
                       })
 
                   // EmailValidator.validate(email)
-                  //TODO Implement login
                 ]))
           ]),
         ),

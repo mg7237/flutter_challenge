@@ -40,7 +40,7 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Container(
         color: k_GreyColor,
-        child: Column(
+        child: ListView(
           children: <Widget>[
             Container(
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
@@ -59,20 +59,20 @@ class HomeScreen extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
               color: Colors.white,
               child: Text(
                 'Welcome to Manish\'s Flutter Challenge Implementation',
                 style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 25,
                   color: Color(0xff757575),
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
             Container(
-                margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 color: Colors.white,
                 height: 120,
                 width: double.infinity,
@@ -86,7 +86,7 @@ class HomeScreen extends StatelessWidget {
             Container(
               padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
               color: k_GreyColor,
-              height: 248,
+              height: 310,
               width: double.infinity,
               child: ListView(
                 padding: EdgeInsets.all(10),
