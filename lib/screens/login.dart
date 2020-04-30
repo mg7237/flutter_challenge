@@ -4,6 +4,7 @@ import 'package:mgflutter/util/constants.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:mgflutter/util/firebase_auth.dart';
 import 'package:mgflutter/util/alert_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -19,6 +20,17 @@ class _LoginState extends State<Login> {
   final FireBaseOps _auth = new FireBaseOps();
   AlertDialogs alertDialog;
   String userResponse;
+
+  void setUserPreference(bool rememberMe) async {
+    var sharedPrefInstance = await SharedPreferences.getInstance();
+    sharedPrefInstance.setBool(k_RememberMe, rememberMe);
+    sharedPrefInstance.setString(k_UserId, _text.text);
+  }
+
+  void checkUserProfile() async {
+    var sharedPrefInstance = await SharedPreferences.getInstance();
+    bool userProfile = sharedPrefInstance.getBool(k_UserProfile) ?? false;
+  }
 
   @override
   void initState() {
@@ -105,76 +117,19 @@ class _LoginState extends State<Login> {
                     height: 25,
                   ),
                   RaisedButton(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 25),
-                      color: Theme.of(context).accentColor,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        'Login / Create Profile',
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      textColor: Colors.white,
-                      onPressed: () async {
-                        setState(() {
-                          _validate = EmailValidator.validate(_text.text);
-                          _pwdValidate = _pwd.text.length > 5 ? true : false;
-                        });
-                        print(_validate);
-                        print(_pwdValidate);
-
-                        if (_validate && _pwdValidate) {
-                          bool validateCreds;
-                          try {
-                            validateCreds = await _auth.validateUserCredentials(
-                                _text.text, _pwd.text);
-                            print('result');
-                          } catch (e) {
-                            print('type');
-                            print(e.runtimeType);
-                            print('--');
-                            print(e.toString());
-                          }
-                          if (validateCreds) {
-                            print('Success Login');
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => HomeScreen()));
-                          } else {
-                            print('Failed Login');
-                            alertDialog = new AlertDialogs(
-                                title: 'Authentication Failed',
-                                message:
-                                    'Unable to login using credentials provided. Click OK to signup using the provided email id; else Cancel to re-enter correct email and password.');
-                            userResponse =
-                                await alertDialog.asyncConfirmDialog(context);
-
-                            if (userResponse == 'OK') {
-                              dynamic result =
-                                  await _auth.createUser(_text.text, _pwd.text);
-
-                              if (result != null) {
-                                alertDialog = new AlertDialogs(
-                                    title: 'Success',
-                                    message:
-                                        'You have been registered with us');
-                                await alertDialog.asyncAckAlert(context);
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => HomeScreen()));
-                              } else {
-                                alertDialog = new AlertDialogs(
-                                    title: 'Failure',
-                                    message: 'Registration Failed');
-                                alertDialog.asyncAckAlert(context);
-                              }
-                            }
-                          }
-                        }
-                      })
+                    padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+                    color: Theme.of(context).accentColor,
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Text(
+                      'Login / Create Profile',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    textColor: Colors.white,
+                    onPressed: () => Navigator.of(context) // TODO replace
+                        .pushReplacementNamed(USER_INFORMATION),
+                  )
 
                   // EmailValidator.validate(email)
                 ]))

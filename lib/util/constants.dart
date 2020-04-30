@@ -9,6 +9,9 @@ const TextStyle k_LabelTextStyle =
 
 const k_NotificationsPrefs = 'PreferNotification';
 const k_RememberMe = 'RememberMe';
+const k_UserId = 'UserId';
+const k_UserProfile = 'UserProfile';
 
 const LOGIN = '/Login';
 const HOME = '/Home';
+const USER_INFORMATION = '/UserInfo';

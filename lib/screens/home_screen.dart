@@ -40,12 +40,12 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Container(
         color: k_GreyColor,
+        height: MediaQuery.of(context).size.height,
         child: ListView(
           children: <Widget>[
             Container(
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
               padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              height: 80,
               width: double.infinity,
               decoration: BoxDecoration(
                   color: Colors.white,
@@ -53,8 +53,22 @@ class HomeScreen extends StatelessWidget {
                     topLeft: const Radius.circular(40.0),
                     topRight: const Radius.circular(40.0),
                   )),
-              child: Image.asset(
-                'images/flutter_logo.png',
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 140,
+                    height: 75,
+                    child: Image.asset(
+                      'images/MG_Logo.png',
+                    ),
+                  ),
+                  SizedBox(
+                    width: 140,
+                    child: Image.asset(
+                      'images/flutter_logo.png',
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(
@@ -64,7 +78,7 @@ class HomeScreen extends StatelessWidget {
               child: Text(
                 'Welcome to Manish\'s Flutter Challenge Implementation',
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 20,
                   color: Color(0xff757575),
                 ),
                 textAlign: TextAlign.center,
@@ -74,7 +88,7 @@ class HomeScreen extends StatelessWidget {
                 margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                 color: Colors.white,
-                height: 120,
+                height: 100,
                 width: double.infinity,
                 child: FlatButton(
                     child: Image.asset('images/Start-Logo-FINAL-01.jpg'),
@@ -84,10 +98,10 @@ class HomeScreen extends StatelessWidget {
                               builder: (context) => ChallengesHome()),
                         ))),
             Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-              color: k_GreyColor,
-              height: 310,
+              margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+              height: 500,
               width: double.infinity,
+              decoration: BoxDecoration(color: k_GreyColor),
               child: ListView(
                 padding: EdgeInsets.all(10),
                 children: <Widget>[
@@ -96,6 +110,8 @@ class HomeScreen extends StatelessWidget {
                     height: 60,
                     child: Card(
                       elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
                       margin: EdgeInsets.all(0),
                       child: FlatButton(
                         child: Row(
@@ -109,6 +125,11 @@ class HomeScreen extends StatelessWidget {
                             ),
                             Text('Flutter Reference - Articles',
                                 style: k_CommonTextStyle),
+                            Expanded(
+                                child: Container(
+                              child: Icon(Icons.keyboard_arrow_right),
+                              alignment: Alignment.centerRight,
+                            )),
                           ],
                         ),
                         onPressed: () {
@@ -125,6 +146,8 @@ class HomeScreen extends StatelessWidget {
                     height: 60,
                     child: Card(
                       elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
                       margin: EdgeInsets.all(0),
                       child: FlatButton(
                         child: Row(
@@ -135,6 +158,11 @@ class HomeScreen extends StatelessWidget {
                             ),
                             Text('Flutter Reference - Videos',
                                 style: k_CommonTextStyle),
+                            Expanded(
+                                child: Container(
+                              child: Icon(Icons.keyboard_arrow_right),
+                              alignment: Alignment.centerRight,
+                            )),
                           ],
                         ),
                         onPressed: () {
@@ -151,6 +179,8 @@ class HomeScreen extends StatelessWidget {
                     height: 60,
                     child: Card(
                       elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
                       margin: EdgeInsets.all(0),
                       child: FlatButton(
                         child: Row(
@@ -160,6 +190,11 @@ class HomeScreen extends StatelessWidget {
                               width: 10,
                             ),
                             Text('Ask Me Anything', style: k_CommonTextStyle),
+                            Expanded(
+                                child: Container(
+                              child: Icon(Icons.keyboard_arrow_right),
+                              alignment: Alignment.centerRight,
+                            )),
                           ],
                         ),
                         onPressed: () {
@@ -176,6 +211,8 @@ class HomeScreen extends StatelessWidget {
                     height: 60,
                     child: Card(
                       elevation: 10,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0)),
                       margin: EdgeInsets.all(0),
                       child: FlatButton(
                         child: Row(
@@ -185,6 +222,11 @@ class HomeScreen extends StatelessWidget {
                               width: 10,
                             ),
                             Text('About Me', style: k_CommonTextStyle),
+                            Expanded(
+                                child: Container(
+                              child: Icon(Icons.keyboard_arrow_right),
+                              alignment: Alignment.centerRight,
+                            )),
                           ],
                         ),
                         onPressed: () {

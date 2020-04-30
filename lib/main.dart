@@ -7,6 +7,13 @@ import 'screens/home_screen.dart';
 import 'package:connectivity/connectivity.dart';
 import 'widgets/check_connectivity.dart';
 import 'widgets/route_app_launch.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:mgflutter/screens/UserInfo.dart';
+
+/*  Application startup page; performs following functions
+    a) Define routes to login page & home pages
+    b) Subscribes to internet connectivity stream which is used to show connectivity error page when the device loses internet connection
+*/
 
 void main() {
   runApp(MyApp());
@@ -44,17 +51,23 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'MG Flutter Challenge',
-        //debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primaryColor: Color(0xff427BFF),
-          accentColor: Color(0xffDC3545),
-        ),
-        home: RouteAppOnLaunch(),
-        routes: <String, WidgetBuilder>{
-          LOGIN: (BuildContext context) => Login(),
-          HOME: (BuildContext context) => HomeScreen(),
-        });
+    return OverlaySupport(
+      child: MaterialApp(
+          title: 'MG Flutter Challenge',
+          //debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primaryColor: Color(0xff427BFF),
+            accentColor: Color(0xffDC3545),
+          ),
+          builder: (context, child) {
+            return showNoInternet ? NoInternet() : child;
+          },
+          home: RouteAppOnLaunch(),
+          routes: <String, WidgetBuilder>{
+            LOGIN: (BuildContext context) => Login(),
+            HOME: (BuildContext context) => HomeScreen(),
+            USER_INFORMATION: (BuildContext context) => UserInfo(),
+          }),
+    );
   }
 }

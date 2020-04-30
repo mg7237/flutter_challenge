@@ -34,15 +34,13 @@ class _RouteAppOnLaunchState extends State<RouteAppOnLaunch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        body: ModalProgressHUD(
+      backgroundColor: Colors.white,
+      body: ModalProgressHUD(
           inAsyncCall: show,
           color: Colors.white,
           child: Center(
-              child: Text(
-            'Loading Your Preferences...',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w500),
+            child: Text(''),
           )),
-        ));
+    );
   }
 }
