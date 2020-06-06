@@ -1,3 +1,5 @@
+import 'dart:core';
+
 class Country {
   String countryCode;
   String countryName;
@@ -7,7 +9,7 @@ class Country {
 
   factory Country.fromJson(Map<String, dynamic> parsedJsonCountry) {
     return new Country(
-        countryCode: parsedJsonCountry['alpha3Code'] as String,
+        countryCode: parsedJsonCountry['alpha2Code'].toLowerCase() as String,
         countryName: parsedJsonCountry['name'] as String,
         countryFlag: parsedJsonCountry['flag'] as String);
   }
