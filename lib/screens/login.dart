@@ -93,7 +93,7 @@ class _LoginState extends State<Login> {
                       decoration: InputDecoration(
                           errorText: _pwdValidate
                               ? null
-                              : 'Password must be more than 5 charcters',
+                              : 'Password must be more than 5 characters',
                           border: UnderlineInputBorder(),
                           hintText: 'Enter your password',
                           hintStyle: TextStyle(fontSize: 15))),
@@ -127,8 +127,57 @@ class _LoginState extends State<Login> {
                       style: TextStyle(fontSize: 20),
                     ),
                     textColor: Colors.white,
-                    onPressed: () => Navigator.of(context) // TODO replace
-                        .pushReplacementNamed(USER_INFORMATION),
+                    onPressed: () async {
+                      setState(() {
+                        _validate = EmailValidator.validate(_text.text);
+                        _pwdValidate = _pwd.text.length > 5 ? true : false;
+                      });
+
+                      if (_validate && _pwdValidate) {
+                        bool validateCreds;
+                        try {
+                          validateCreds = await _auth.validateUserCredentials(
+                              _text.text, _pwd.text);
+                        } catch (e) {
+                          print(e.toString());
+                        }
+                        if (validateCreds) {
+                          print('Success Login');
+                          setUserPreference(_rememberMe);
+                          Navigator.of(context)
+                              .pushReplacementNamed(USER_INFORMATION);
+                        } else {
+                          print('Failed Login');
+                          alertDialog = new AlertDialogs(
+                              title: 'Authentication Failed',
+                              message:
+                                  'Unable to login using credentials provided. Click OK to signup using the provided email id; Cancel to retry.');
+                          userResponse =
+                              await alertDialog.asyncConfirmDialog(context);
+
+                          if (userResponse == 'OK') {
+                            dynamic result =
+                                await _auth.createUser(_text.text, _pwd.text);
+
+                            if (result != null) {
+                              alertDialog = new AlertDialogs(
+                                  title: 'Success',
+                                  message: 'You have been registered with us');
+                              await alertDialog.asyncAckAlert(context);
+
+                              setUserPreference(_rememberMe);
+
+                              Navigator.of(context).pushReplacementNamed(HOME);
+                            } else {
+                              alertDialog = new AlertDialogs(
+                                  title: 'Failure',
+                                  message: 'Registration Failed');
+                              await alertDialog.asyncAckAlert(context);
+                            }
+                          }
+                        }
+                      }
+                    },
                   )
 
                   // EmailValidator.validate(email)
