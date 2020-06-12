@@ -151,7 +151,7 @@ class _LoginState extends State<Login> {
                           alertDialog = new AlertDialogs(
                               title: 'Authentication Failed',
                               message:
-                                  'Unable to login using credentials provided. Click OK to signup using the provided email id; Cancel to retry.');
+                                  'Unable to login using credentials provided. Click OK to sign-up. Cancel to retry.');
                           userResponse =
                               await alertDialog.asyncConfirmDialog(context);
 

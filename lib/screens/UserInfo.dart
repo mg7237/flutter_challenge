@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mgflutter/util/constants.dart';
-import 'package:country_icons/country_icons.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -8,6 +7,10 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:mgflutter/util/countries.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:io' show Platform, stdout;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mgflutter/widgets/gender_select_field.dart';
+import 'package:mgflutter/widgets/date_time_picker.dart';
 
 class UserInfo extends StatefulWidget {
   @override
@@ -17,9 +20,15 @@ class UserInfo extends StatefulWidget {
 class _UserInfoState extends State<UserInfo> {
   final _text = TextEditingController();
   final _country = TextEditingController();
+  String emailInitials;
   bool _display = true;
+  bool _value = true;
+  double _experience;
+
   AutoCompleteTextField<Country> autoCompleteField;
   GlobalKey key = new GlobalKey<AutoCompleteTextFieldState<Country>>();
+  GlobalKey _formKey = GlobalKey<FormState>();
+
   List<Country> countryList = [];
   var _image;
 
@@ -47,8 +56,18 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   _showImagePicker() {
-    bool checkCameraPermission = false;
+    print(Platform.operatingSystem);
+    if (Platform.operatingSystem == "ios") {
+      _showCupertinoDialog();
+      print('is a Mac');
+    } else {
+      print('is not a Mac');
+      _showAndroidDialog();
+    }
+  }
 
+  Future<void> _showCupertinoDialog() async {
+    bool checkCameraPermission = false;
     showCupertinoModalPopup(
         context: context,
         builder: (context) {
@@ -83,11 +102,61 @@ class _UserInfoState extends State<UserInfo> {
         });
   }
 
+  Future<void> _showAndroidDialog() async {
+    bool checkCameraPermission = false;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Select Image From'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Camera'),
+              onPressed: () async {
+                checkCameraPermission = true;
+                _image =
+                    await ImagePicker.pickImage(source: ImageSource.camera);
+                setState(() {});
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text('Gallery'),
+              onPressed: () async {
+                _image =
+                    await ImagePicker.pickImage(source: ImageSource.gallery);
+                setState(() {});
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     getCountryData();
+    getUserEmailInitial();
     super.initState();
+  }
+
+  Future<void> getUserEmailInitial() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String myString = prefs.getString(k_UserId) ?? '';
+
+    if (myString.length > 2) {
+      emailInitials = myString.substring(0, 2).toUpperCase();
+    }
   }
 
   createAutoCompleteField() {
@@ -119,6 +188,8 @@ class _UserInfoState extends State<UserInfo> {
         itemSubmitted: (item) {
           setState(() {
             selectedCountry = item;
+            print("Item");
+            print(item);
             autoCompleteField.textField.controller.text = item.countryName;
           });
         },
@@ -141,79 +212,173 @@ class _UserInfoState extends State<UserInfo> {
       color: Colors.blueAccent,
       child: Scaffold(
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(30),
-            child:
-                Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-              FlatButton(
-                onPressed: () {
-                  _showImagePicker();
-                },
-                child: CircleAvatar(
-                  child: (_image != null)
-                      ? Image.file(
-                          _image,
-                          fit: BoxFit.cover,
-                        )
-                      : Text('MG'),
-                  radius: 50,
-                ),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 30),
-                  Text(
-                    "Your Name",
-                    style: k_LabelTextStyle,
-                  ),
-                  TextField(
-                      controller: _text,
-                      style: k_CommonTextStyle,
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          errorText: _text.text ?? 'Please enter your name',
-                          hintText: 'Your Name',
-                          hintStyle: TextStyle(fontSize: 15))),
-                  SizedBox(height: 25),
-                  Text(
-                    "Your Country",
-                    style: k_LabelTextStyle,
-                  ),
-                  SizedBox(height: 25),
-                  Container(
-                    height: 50,
-                    child: !_display
-                        ? autoCompleteField
-                        : TextField(
-                            decoration:
-                                InputDecoration(hintText: 'Loading ...'),
-                          ),
-                  ),
-                  SizedBox(height: 20),
-                  ConstrainedBox(
-                    constraints: BoxConstraints(minWidth: double.infinity),
-                    child: RaisedButton(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 15, horizontal: 25),
-                      color: Theme.of(context).accentColor,
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Text(
-                        'Save My Profile',
-                        style: TextStyle(fontSize: 20),
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(30),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      FlatButton(
+                        onPressed: () {
+                          _showImagePicker();
+                        },
+                        child: CircleAvatar(
+                          child: (_image != null)
+                              ? ClipOval(
+                                  child: Container(
+                                    height: 100,
+                                    width: 100,
+                                    child: Image.file(
+                                      _image,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                )
+                              : Text(emailInitials ?? ""),
+                          radius: 50,
+                        ),
                       ),
-                      textColor: Colors.white,
-                      onPressed: () => Navigator.of(context) // TODO replace
-                          .pushReplacementNamed(USER_INFORMATION),
-                    ),
-                  )
-                ],
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 24),
+                          Text(
+                            "Your Name",
+                            style: k_LabelTextStyle,
+                          ),
+                          TextFormField(
+                              controller: _text,
+                              style: k_CommonTextStyle,
+                              textInputAction: TextInputAction.next,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter your name';
+                                } else {
+                                  return null;
+                                }
+                              },
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Color(0xFFBDBDBD))),
+                                  errorText:
+                                      _text.text ?? 'Please enter your name',
+                                  hintText: 'Your Name',
+                                  hintStyle: TextStyle(fontSize: 16))),
+                          SizedBox(height: 8),
+                          Text(
+                            "Gender",
+                            style: k_LabelTextStyle,
+                          ),
+                          GenderSelectField(),
+                          SizedBox(height: 8),
+                          Text(
+                            "Date of birth",
+                            style: k_LabelTextStyle,
+                          ),
+                          BasicDateField(),
+                          SizedBox(height: 8),
+                          Text(
+                            "Your Country",
+                            style: k_LabelTextStyle,
+                          ),
+                          //SizedBox(height: 16),
+                          Container(
+                            child: !_display
+                                ? autoCompleteField
+                                : TextField(
+                                    decoration: InputDecoration(
+                                        hintText: 'Loading ...'),
+                                  ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            "Your Flutter Experience",
+                            style: k_LabelTextStyle,
+                          ),
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              activeTrackColor: Colors.red[700],
+                              inactiveTrackColor: Colors.red[100],
+                              trackShape: RoundedRectSliderTrackShape(),
+                              trackHeight: 4.0,
+                              thumbShape: RoundSliderThumbShape(
+                                  enabledThumbRadius: 12.0),
+                              thumbColor: Colors.redAccent,
+                              overlayColor: Colors.red.withAlpha(32),
+                              overlayShape:
+                                  RoundSliderOverlayShape(overlayRadius: 28.0),
+                              tickMarkShape: RoundSliderTickMarkShape(),
+                              activeTickMarkColor: Colors.red[700],
+                              inactiveTickMarkColor: Colors.red[100],
+                              valueIndicatorShape:
+                                  PaddleSliderValueIndicatorShape(),
+                              valueIndicatorColor: Colors.redAccent,
+                              valueIndicatorTextStyle: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            child: Slider(
+                              min: 0,
+                              max: 5,
+                              divisions: 10,
+                              value: _experience ?? 0,
+                              label: _experience.toString(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _experience = value;
+                                });
+                              },
+                              onChangeEnd: (value) {
+                                setState(() {
+                                  _experience = value;
+                                });
+                              },
+                            ),
+                          ),
+
+                          SizedBox(height: 8),
+
+                          Row(
+                            children: [
+                              Text('Receive Communications?'),
+                              Switch(
+                                  value: _value,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
+                                  })
+                            ],
+                          ),
+                          SizedBox(height: 16),
+                          ConstrainedBox(
+                            constraints:
+                                BoxConstraints(minWidth: double.infinity),
+                            child: RaisedButton(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 15, horizontal: 25),
+                              color: Theme.of(context).accentColor,
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Text(
+                                'Save My Profile',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              textColor: Colors.white,
+                              onPressed: () =>
+                                  Navigator.of(context) // TODO replace
+                                      .pushReplacementNamed(HOME),
+                            ),
+                          )
+                        ],
+                      ),
+                    ]),
               ),
-            ]),
+            ),
           ),
         ),
       ),

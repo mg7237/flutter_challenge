@@ -29,12 +29,9 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('Item 2'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
+                title: Text('Item 2'),
+                onTap: () => Navigator.of(context)
+                    .pushReplacementNamed(USER_INFORMATION)),
           ],
         ),
       ),
