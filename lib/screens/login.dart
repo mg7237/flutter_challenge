@@ -21,15 +21,16 @@ class _LoginState extends State<Login> {
   AlertDialogs alertDialog;
   String userResponse;
 
-  void setUserPreference(bool rememberMe) async {
+  Future<bool> setUserPreference(bool rememberMe) async {
     var sharedPrefInstance = await SharedPreferences.getInstance();
     sharedPrefInstance.setBool(k_RememberMe, rememberMe);
     sharedPrefInstance.setString(k_UserId, _text.text);
+    return true;
   }
 
   void checkUserProfile() async {
     var sharedPrefInstance = await SharedPreferences.getInstance();
-    bool userProfile = sharedPrefInstance.getBool(k_UserProfile) ?? false;
+    bool userProfile = sharedPrefInstance.getBool(k_UserProfileExists) ?? false;
   }
 
   @override
@@ -143,9 +144,8 @@ class _LoginState extends State<Login> {
                         }
                         if (validateCreds) {
                           print('Success Login');
-                          setUserPreference(_rememberMe);
-                          Navigator.of(context)
-                              .pushReplacementNamed(USER_INFORMATION);
+                          await setUserPreference(_rememberMe);
+                          Navigator.of(context).pushNamed(USER_INFORMATION);
                         } else {
                           print('Failed Login');
                           alertDialog = new AlertDialogs(
@@ -165,7 +165,7 @@ class _LoginState extends State<Login> {
                                   message: 'You have been registered with us');
                               await alertDialog.asyncAckAlert(context);
 
-                              setUserPreference(_rememberMe);
+                              await setUserPreference(_rememberMe);
 
                               Navigator.of(context).pushReplacementNamed(HOME);
                             } else {

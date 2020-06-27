@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+// Class providing alert dialog feature. To be used consistently across application
+
 enum ConfirmAction { CANCEL, OK }
 
 class AlertDialogs {
   final String title;
   final String message;
   AlertDialogs({this.title, this.message});
+
+//  asyncConfirmDialog used where user has option of OK / Cancel.
+//  For example Do you wish to continue? Yes/No
 
   Future<String> asyncConfirmDialog(BuildContext context) async {
     return showDialog<String>(
@@ -33,6 +38,9 @@ class AlertDialogs {
       },
     );
   }
+
+//  asyncAckAlert used where user can acknowledge the message.
+//  For example Save was successful
 
   Future<void> asyncAckAlert(BuildContext context) {
     return showDialog<void>(

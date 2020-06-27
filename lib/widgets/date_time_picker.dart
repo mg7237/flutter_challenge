@@ -6,17 +6,25 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 class BasicDateField extends StatelessWidget {
   final format = DateFormat("dd-MMM-yyyy");
+  final DateTime initValue;
+  final Function selectedDate;
+  BasicDateField({this.initValue, this.selectedDate});
+
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       DateTimeField(
         format: format,
-        onShowPicker: (context, currentValue) {
+        initialValue: initValue,
+        onChanged: (newValue) {
+          this.selectedDate(newValue);
+        },
+        onShowPicker: (context, initValue) {
           return showDatePicker(
               context: context,
               firstDate: DateTime(1900),
-              initialDate: currentValue ?? DateTime(2000),
-              lastDate: DateTime(2020));
+              initialDate: initValue ?? DateTime(2000),
+              lastDate: DateTime(2015));
         },
       ),
     ]);

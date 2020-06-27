@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:mgflutter/util/constants.dart';
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
+import 'package:mgflutter/widgets/country_auto_suggest.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
-import 'package:mgflutter/util/countries.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'dart:io' show Platform, stdout;
+import 'dart:io' show File, Platform;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:mgflutter/widgets/gender_select_field.dart';
 import 'package:mgflutter/widgets/date_time_picker.dart';
+import 'package:mgflutter/util/firebase_crud.dart';
+import 'package:mgflutter/util/firebase_storage.dart';
+import 'dart:async';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class UserInfo extends StatefulWidget {
   @override
@@ -18,52 +19,61 @@ class UserInfo extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfo> {
-  final _text = TextEditingController();
-  final _country = TextEditingController();
-  String emailInitials;
-  bool _display = true;
-  bool _value = true;
+  final _name = TextEditingController();
+
+  String _emailInitials;
+  String _email;
+  String _imageURL = "";
+  int _gender;
+  bool _receiveComms = true;
   double _experience;
+  DateTime _dob;
+  File _image;
+  bool _display = true;
+  String _selectedCountry;
+  UserProfile _initUserProfile;
+  FocusNode _focusNode = FocusNode();
 
-  AutoCompleteTextField<Country> autoCompleteField;
-  GlobalKey key = new GlobalKey<AutoCompleteTextFieldState<Country>>();
   GlobalKey _formKey = GlobalKey<FormState>();
+  UserProfile _userProfile;
 
-  List<Country> countryList = [];
-  var _image;
-
-  Country selectedCountry;
-
-  void getCountryData() async {
-    List<Country> countryList1;
-    _display = true;
-    var _url =
-        'https://restcountries.eu/rest/v2/all?fields=name;alpha2Code;flag';
-    var response = await http.get(_url);
-    try {
-      if (response.statusCode == 200) {
-        dynamic jsonResponse = convert.jsonDecode(response.body);
-        print(jsonResponse);
-        Countries countriesList = Countries.fromJson(jsonResponse);
-        countryList = countriesList.provideCountryList();
-      } else {
-        print('Request failed with status: ${response.statusCode}.');
-      }
-    } catch (e) {
-      print(e);
-    }
-    setState(() => _display = false);
+  void userSelectedGender(int genderValue) {
+    _gender = genderValue;
   }
 
-  _showImagePicker() {
+  void selectedDate(DateTime value) {
+    _dob = value;
+  }
+
+  void userSelectedCountry(String country) {
+    _selectedCountry = country;
+  }
+
+  _showImagePicker() async {
+    _image = null;
     print(Platform.operatingSystem);
     if (Platform.operatingSystem == "ios") {
-      _showCupertinoDialog();
-      print('is a Mac');
+      await _showCupertinoDialog();
     } else {
-      print('is not a Mac');
-      _showAndroidDialog();
+      await _showAndroidDialog();
     }
+    if (_image != null) {
+      FirebaseImageOps _firebaseImageOPS = FirebaseImageOps();
+      if (_imageURL != "") {
+        _firebaseImageOPS.deleteImage(documentURL: _imageURL);
+      }
+      _imageURL =
+          await _firebaseImageOPS.uploadFile(user: _email, file: _image);
+      setState(() {});
+      _image = null;
+    }
+  }
+
+  Future<UserProfile> getUserProfile(String email) async {
+    FirebaseCrud _firebaseCrud = FirebaseCrud();
+    UserProfile userProfile;
+    userProfile = await _firebaseCrud.getUserProfile(email: email);
+    return userProfile;
   }
 
   Future<void> _showCupertinoDialog() async {
@@ -84,6 +94,7 @@ class _UserInfoState extends State<UserInfo> {
                   checkCameraPermission = true;
                   _image =
                       await ImagePicker.pickImage(source: ImageSource.camera);
+
                   setState(() {});
                   Navigator.pop(context);
                 },
@@ -144,68 +155,41 @@ class _UserInfoState extends State<UserInfo> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    getCountryData();
-    getUserEmailInitial();
     super.initState();
+    print("emAIL-1:-> $_email");
+    initializeUserDate();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_focusNode);
+    });
+    print("emAIL0:-> $_email");
   }
 
-  Future<void> getUserEmailInitial() async {
+  Future<void> initializeUserDate() async {
     final prefs = await SharedPreferences.getInstance();
     final String myString = prefs.getString(k_UserId) ?? '';
-
+    _email = myString;
     if (myString.length > 2) {
-      emailInitials = myString.substring(0, 2).toUpperCase();
+      _emailInitials = myString.substring(0, 2).toUpperCase();
     }
-  }
-
-  createAutoCompleteField() {
-    autoCompleteField = AutoCompleteTextField<Country>(
-        key: key,
-        itemBuilder: (context, item) {
-          return Padding(
-              padding: EdgeInsets.all(5),
-              child: ListTile(
-                title: Text(
-                  item.countryName,
-                  style: TextStyle(fontSize: 16.0),
-                ),
-                trailing: Container(
-                  child: Image.asset(
-                      'icons/flags/png/' + item.countryCode + '.png',
-                      package: 'country_icons'),
-                  height: 16,
-                  width: 16,
-                ),
-              ));
-        },
-        itemFilter: (item, query) {
-          return item.countryName.toLowerCase().startsWith(query.toLowerCase());
-        },
-        itemSorter: (a, b) {
-          return a.countryName.compareTo(b.countryName);
-        },
-        itemSubmitted: (item) {
-          setState(() {
-            selectedCountry = item;
-            print("Item");
-            print(item);
-            autoCompleteField.textField.controller.text = item.countryName;
-          });
-        },
-        suggestions: countryList,
-        style: k_CommonTextStyle,
-        clearOnSubmit: false,
-        textInputAction: TextInputAction.next,
-        decoration: InputDecoration(
-            border: UnderlineInputBorder(),
-            errorText: _country.text ?? 'Please select your location country',
-            hintText: 'Your Location'));
+    getUserProfile(_email).then((value) {
+      if (value != null) {
+        _initUserProfile = value;
+        _name.text = _initUserProfile.name ?? "";
+        _gender = _initUserProfile.gender;
+        _dob = _initUserProfile.dateOfBirth;
+        _selectedCountry = _initUserProfile.country;
+        _experience = _initUserProfile.flutterExperience;
+        _receiveComms = _initUserProfile.receiveComms;
+        _imageURL = _initUserProfile.imageURL;
+      }
+      setState(() {
+        _display = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    createAutoCompleteField();
     return Material(
         child: ModalProgressHUD(
       inAsyncCall: _display,
@@ -225,23 +209,21 @@ class _UserInfoState extends State<UserInfo> {
                           _showImagePicker();
                         },
                         child: CircleAvatar(
-                          child: (_image != null)
+                          radius: 50,
+                          child: (_imageURL != "" && _imageURL != null)
                               ? ClipOval(
                                   child: Container(
-                                    height: 100,
-                                    width: 100,
-                                    child: Image.file(
-                                      _image,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                )
-                              : Text(emailInitials ?? ""),
-                          radius: 50,
+                                      height: 100,
+                                      width: 100,
+                                      child: Image(
+                                          image: CachedNetworkImageProvider(
+                                        _imageURL,
+                                      ))))
+                              : Text(_emailInitials ?? ""),
                         ),
                       ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           SizedBox(height: 24),
                           Text(
@@ -249,8 +231,9 @@ class _UserInfoState extends State<UserInfo> {
                             style: k_LabelTextStyle,
                           ),
                           TextFormField(
-                              controller: _text,
+                              controller: _name,
                               style: k_CommonTextStyle,
+                              focusNode: _focusNode,
                               textInputAction: TextInputAction.next,
                               validator: (value) {
                                 if (value.isEmpty) {
@@ -262,37 +245,40 @@ class _UserInfoState extends State<UserInfo> {
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(
                                       borderSide:
-                                          BorderSide(color: Color(0xFFBDBDBD))),
+                                          BorderSide(color: Color(0xFD4D4D4))),
                                   errorText:
-                                      _text.text ?? 'Please enter your name',
+                                      (_name.text == null || _name.text == "")
+                                          ? 'Please enter your name'
+                                          : null,
                                   hintText: 'Your Name',
                                   hintStyle: TextStyle(fontSize: 16))),
-                          SizedBox(height: 8),
+                          SizedBox(height: 16),
                           Text(
                             "Gender",
                             style: k_LabelTextStyle,
                           ),
-                          GenderSelectField(),
-                          SizedBox(height: 8),
+                          GenderSelectField(
+                            userSelectedValue: userSelectedGender,
+                            initValue: _gender,
+                          ),
+                          SizedBox(height: 16),
                           Text(
                             "Date of birth",
                             style: k_LabelTextStyle,
                           ),
-                          BasicDateField(),
-                          SizedBox(height: 8),
+                          BasicDateField(
+                              initValue: _dob, selectedDate: selectedDate),
+                          SizedBox(height: 16),
                           Text(
                             "Your Country",
                             style: k_LabelTextStyle,
                           ),
                           //SizedBox(height: 16),
-                          Container(
-                            child: !_display
-                                ? autoCompleteField
-                                : TextField(
-                                    decoration: InputDecoration(
-                                        hintText: 'Loading ...'),
-                                  ),
-                          ),
+                          CountryAutoSuggest(
+                              countrySelected: userSelectedCountry,
+                              initCountryCode: (_initUserProfile == null)
+                                  ? null
+                                  : _selectedCountry),
                           SizedBox(height: 8),
                           Text(
                             "Your Flutter Experience",
@@ -345,10 +331,10 @@ class _UserInfoState extends State<UserInfo> {
                             children: [
                               Text('Receive Communications?'),
                               Switch(
-                                  value: _value,
+                                  value: _receiveComms,
                                   onChanged: (value) {
                                     setState(() {
-                                      _value = value;
+                                      _receiveComms = value;
                                     });
                                   })
                             ],
@@ -369,9 +355,21 @@ class _UserInfoState extends State<UserInfo> {
                                 style: TextStyle(fontSize: 20),
                               ),
                               textColor: Colors.white,
-                              onPressed: () =>
-                                  Navigator.of(context) // TODO replace
-                                      .pushReplacementNamed(HOME),
+                              onPressed: () {
+                                _userProfile = new UserProfile(
+                                    name: _name.text,
+                                    email: _email,
+                                    gender: _gender,
+                                    dateOfBirth: _dob,
+                                    country: _selectedCountry,
+                                    flutterExperience: _experience,
+                                    receiveComms: _receiveComms,
+                                    imageURL: _imageURL);
+                                var firebaseCrud = FirebaseCrud();
+                                firebaseCrud.saveUser(_userProfile);
+                                Navigator.of(context)
+                                    .pushReplacementNamed(HOME);
+                              },
                             ),
                           )
                         ],
