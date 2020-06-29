@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:mgflutter/util/list_data.dart";
 
+/// Drop Down implementation for Gender select field
+
 class GenderSelectField extends StatefulWidget {
   final Function userSelectedValue;
   final int initValue;
@@ -20,7 +22,6 @@ class _GenderSelectFieldState extends State<GenderSelectField> {
       _itemMenuList.add(DropdownMenuItem(value: i, child: Text(gender[i])));
     }
     _value = widget.initValue;
-    print("_vale ${_value}");
   }
 
   @override

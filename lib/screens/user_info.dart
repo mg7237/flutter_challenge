@@ -13,6 +13,9 @@ import 'package:mgflutter/util/firebase_storage.dart';
 import 'dart:async';
 import 'package:cached_network_image/cached_network_image.dart';
 
+/// User Information Create / Read / Update from Firestore DB
+/// Most commonly used controls implemented including drop down & auto complete
+
 class UserInfo extends StatefulWidget {
   @override
   _UserInfoState createState() => _UserInfoState();
@@ -37,43 +40,58 @@ class _UserInfoState extends State<UserInfo> {
   GlobalKey _formKey = GlobalKey<FormState>();
   UserProfile _userProfile;
 
+  /// Pulling state up
   void userSelectedGender(int genderValue) {
     _gender = genderValue;
   }
 
+  /// Pulling state up
   void selectedDate(DateTime value) {
     _dob = value;
   }
 
+  /// Pulling state up
   void userSelectedCountry(String country) {
     _selectedCountry = country;
   }
 
+  /// Depending on the OS, show iOS or Android style option select dialog
+  /// Once user selects a new image, delete old image and create new image
+  /// at Firebase Storage
+
   _showImagePicker() async {
-    _image = null;
-    print(Platform.operatingSystem);
-    if (Platform.operatingSystem == "ios") {
-      await _showCupertinoDialog();
-    } else {
-      await _showAndroidDialog();
-    }
-    if (_image != null) {
-      FirebaseImageOps _firebaseImageOPS = FirebaseImageOps();
-      if (_imageURL != "") {
-        _firebaseImageOPS.deleteImage(documentURL: _imageURL);
-      }
-      _imageURL =
-          await _firebaseImageOPS.uploadFile(user: _email, file: _image);
-      setState(() {});
+    try {
       _image = null;
+      print(Platform.operatingSystem);
+      if (Platform.operatingSystem == "ios") {
+        await _showCupertinoDialog();
+      } else {
+        await _showAndroidDialog();
+      }
+      if (_image != null) {
+        FirebaseImageOps _firebaseImageOPS = FirebaseImageOps();
+        if (_imageURL != "") {
+          _firebaseImageOPS.deleteImage(documentURL: _imageURL);
+        }
+        _imageURL =
+            await _firebaseImageOPS.uploadFile(user: _email, file: _image);
+        setState(() {});
+        _image = null;
+      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 
   Future<UserProfile> getUserProfile(String email) async {
-    FirebaseCrud _firebaseCrud = FirebaseCrud();
-    UserProfile userProfile;
-    userProfile = await _firebaseCrud.getUserProfile(email: email);
-    return userProfile;
+    try {
+      FirebaseCrud _firebaseCrud = FirebaseCrud();
+      UserProfile userProfile;
+      userProfile = await _firebaseCrud.getUserProfile(email: email);
+      return userProfile;
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   Future<void> _showCupertinoDialog() async {
@@ -156,36 +174,43 @@ class _UserInfoState extends State<UserInfo> {
   @override
   void initState() {
     super.initState();
-    print("emAIL-1:-> $_email");
     initializeUserDate();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       FocusScope.of(context).requestFocus(_focusNode);
     });
-    print("emAIL0:-> $_email");
   }
 
   Future<void> initializeUserDate() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String myString = prefs.getString(k_UserId) ?? '';
-    _email = myString;
-    if (myString.length > 2) {
-      _emailInitials = myString.substring(0, 2).toUpperCase();
-    }
-    getUserProfile(_email).then((value) {
-      if (value != null) {
-        _initUserProfile = value;
-        _name.text = _initUserProfile.name ?? "";
-        _gender = _initUserProfile.gender;
-        _dob = _initUserProfile.dateOfBirth;
-        _selectedCountry = _initUserProfile.country;
-        _experience = _initUserProfile.flutterExperience;
-        _receiveComms = _initUserProfile.receiveComms;
-        _imageURL = _initUserProfile.imageURL;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String myString = prefs.getString(k_UserId) ?? '';
+      _email = myString;
+      if (myString.length > 2) {
+        _emailInitials = myString.substring(0, 2).toUpperCase();
       }
-      setState(() {
-        _display = false;
+
+      /// Updating controls with data retrieved from the DB
+      getUserProfile(_email).then((value) {
+        if (value != null) {
+          setState(() {
+            _initUserProfile = value;
+            _name.text = _initUserProfile.name ?? "";
+            _gender = _initUserProfile.gender;
+            _dob = _initUserProfile.dateOfBirth;
+            _selectedCountry = _initUserProfile.country ?? "";
+            _experience = _initUserProfile.flutterExperience ?? 0;
+            _receiveComms = _initUserProfile.receiveComms ?? true;
+            _imageURL = _initUserProfile.imageURL ?? "";
+            _display = false;
+          });
+        }
+        setState(() {
+          _display = false;
+        });
       });
-    });
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -217,8 +242,9 @@ class _UserInfoState extends State<UserInfo> {
                                       width: 100,
                                       child: Image(
                                           image: CachedNetworkImageProvider(
-                                        _imageURL,
-                                      ))))
+                                            _imageURL,
+                                          ),
+                                          fit: BoxFit.cover)))
                               : Text(_emailInitials ?? ""),
                         ),
                       ),
@@ -246,10 +272,6 @@ class _UserInfoState extends State<UserInfo> {
                                   border: UnderlineInputBorder(
                                       borderSide:
                                           BorderSide(color: Color(0xFD4D4D4))),
-                                  errorText:
-                                      (_name.text == null || _name.text == "")
-                                          ? 'Please enter your name'
-                                          : null,
                                   hintText: 'Your Name',
                                   hintStyle: TextStyle(fontSize: 16))),
                           SizedBox(height: 16),
@@ -257,28 +279,33 @@ class _UserInfoState extends State<UserInfo> {
                             "Gender",
                             style: k_LabelTextStyle,
                           ),
-                          GenderSelectField(
-                            userSelectedValue: userSelectedGender,
-                            initValue: _gender,
-                          ),
+
+                          (_display)
+                              ? TextFormField()
+                              : GenderSelectField(
+                                  userSelectedValue: userSelectedGender,
+                                  initValue: _gender,
+                                ),
                           SizedBox(height: 16),
                           Text(
                             "Date of birth",
                             style: k_LabelTextStyle,
                           ),
-                          BasicDateField(
-                              initValue: _dob, selectedDate: selectedDate),
+                          (_display)
+                              ? TextFormField()
+                              : BasicDateField(
+                                  initValue: _dob, selectedDate: selectedDate),
                           SizedBox(height: 16),
                           Text(
                             "Your Country",
                             style: k_LabelTextStyle,
                           ),
                           //SizedBox(height: 16),
-                          CountryAutoSuggest(
-                              countrySelected: userSelectedCountry,
-                              initCountryCode: (_initUserProfile == null)
-                                  ? null
-                                  : _selectedCountry),
+                          (_display)
+                              ? TextFormField()
+                              : CountryAutoSuggest(
+                                  countrySelected: userSelectedCountry,
+                                  initCountryCode: _selectedCountry),
                           SizedBox(height: 8),
                           Text(
                             "Your Flutter Experience",

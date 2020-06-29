@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
-// ...
+/// Multiple implementation of Date & Time classes using DateTime picker
 
 class BasicDateField extends StatelessWidget {
   final format = DateFormat("dd-MMM-yyyy");
@@ -42,7 +42,7 @@ class BasicTimeField extends StatelessWidget {
         onShowPicker: (context, currentValue) async {
           final time = await showTimePicker(
             context: context,
-            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+            initialTime: TimeOfDay.fromDateTime(DateTime.now()),
           );
           return DateTimeField.convert(time);
         },

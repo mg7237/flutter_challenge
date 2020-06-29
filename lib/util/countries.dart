@@ -1,7 +1,7 @@
 import 'dart:core';
 
-// Class used to create list of countries from the parsed json,
-// containing data received from the countries API
+/// Class used to create list of countries from the parsed json,
+/// containing data received from the countries API
 
 class Country {
   String countryCode;

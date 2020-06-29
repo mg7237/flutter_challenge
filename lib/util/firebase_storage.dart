@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io';
 
+/// File storage / retrieval / delete of files at Fiebase Storage cloud
 class FirebaseImageOps {
   File _file;
   String _user;
@@ -23,13 +24,17 @@ class FirebaseImageOps {
       throw ("User not provided");
     } else {
       _fileName = path.basename(_file.path);
-      StorageTaskSnapshot snapshot = await storage
-          .ref()
-          .child("images/$_user/$_fileName")
-          .putFile(_file)
-          .onComplete;
-      if (snapshot.error == null) {
-        downloadURL = await snapshot.ref.getDownloadURL();
+      try {
+        StorageTaskSnapshot snapshot = await storage
+            .ref()
+            .child("images/$_user/$_fileName")
+            .putFile(_file)
+            .onComplete;
+        if (snapshot.error == null) {
+          downloadURL = await snapshot.ref.getDownloadURL();
+        }
+      } catch (e) {
+        print(e.toString());
       }
     }
     return downloadURL;

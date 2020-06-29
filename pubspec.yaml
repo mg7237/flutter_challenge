@@ -22,10 +22,11 @@ dependencies:
   country_icons: ^1.1.1
   http: ^0.12.1
   autocomplete_textfield: ^1.7.3
-  image_picker: ^0.6.5+3
+  image_picker: ^0.6.7+2
   datetime_picker_formfield: ^1.0.0
   firebase_storage: ^3.1.6
   cached_network_image: ^2.2.0+1
+  validators: ^2.0.0
 
 dev_dependencies:
   flutter_test:

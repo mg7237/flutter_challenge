@@ -5,6 +5,9 @@ import 'package:mgflutter/util/constants.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
+/// Auto complete field for Countries retrieved from REST API providing
+/// Get Country List method to get code and name of all countries.
+
 class CountryAutoSuggest extends StatefulWidget {
   final Function countrySelected;
   final String initCountryCode;
@@ -25,6 +28,8 @@ class _CountryAutoSuggestState extends State<CountryAutoSuggest> {
   Country selectedCountry;
   bool _display = false;
 
+  /// Call restcountries.eu REST call to retrieve list of countries and populate
+  /// countryList array which holds list of countries.
   void getCountryData() async {
     _display = false;
     var _url =
@@ -39,7 +44,7 @@ class _CountryAutoSuggestState extends State<CountryAutoSuggest> {
         print('Request failed with status: ${response.statusCode}.');
       }
     } catch (e) {
-      print(e);
+      print(e.toString());
     }
     setState(() => _display = true);
     if (widget.initCountryCode != null) {
@@ -47,20 +52,25 @@ class _CountryAutoSuggestState extends State<CountryAutoSuggest> {
     }
   }
 
+  /// The data for a user could have a country selected by user in previous session.
+  /// The initCountry is the country code based on which the countries array is searched
+  /// for the matching country code. If there is match then the country object
+  /// value is set to the one where country code matches.
   void getInitialCountry() {
     int arrayLength = countryList.length.toInt();
     bool loop = true;
     int i = 0;
-    print("country ${widget.initCountryCode}");
     while (loop) {
       if (i == (arrayLength - 1)) {
+        _textController.text = "";
         loop = false;
       } else if (countryList[i].countryCode.toUpperCase() ==
           widget.initCountryCode.toUpperCase()) {
         selectedCountry = countryList[i];
         _textController.text = selectedCountry.countryName;
-        setState(() {});
+        print("_textController.text ..${_textController.text}");
         loop = false;
+        setState(() {});
       }
       i++;
     }
@@ -105,9 +115,7 @@ class _CountryAutoSuggestState extends State<CountryAutoSuggest> {
         clearOnSubmit: false,
         textInputAction: TextInputAction.next,
         decoration: InputDecoration(
-            border: UnderlineInputBorder(),
-            errorText: _country.text ?? 'Please select your location country',
-            hintText: 'Your Location'));
+            border: UnderlineInputBorder(), hintText: 'Your Location'));
   }
 
   @override

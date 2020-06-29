@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:mgflutter/screens/home_screen.dart';
-import 'package:mgflutter/util/constants.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:mgflutter/util/constants.dart';
 import 'package:mgflutter/util/firebase_auth.dart';
 import 'package:mgflutter/util/alert_dialog.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mgflutter/widgets/ensure_visible_when_focused.dart';
+
+/// Login page uses FireStore Authentication (user/password)
+/// to create & authenticate users
 
 class Login extends StatefulWidget {
   @override
@@ -20,23 +24,19 @@ class _LoginState extends State<Login> {
   final FireBaseOps _auth = new FireBaseOps();
   AlertDialogs alertDialog;
   String userResponse;
+  FocusNode _focusNodeUserId = FocusNode();
+  FocusNode _focusNodePassword = FocusNode();
+  FocusNode _focusLoginButton = FocusNode();
 
-  Future<bool> setUserPreference(bool rememberMe) async {
-    var sharedPrefInstance = await SharedPreferences.getInstance();
-    sharedPrefInstance.setBool(k_RememberMe, rememberMe);
-    sharedPrefInstance.setString(k_UserId, _text.text);
-    return true;
-  }
-
-  void checkUserProfile() async {
-    var sharedPrefInstance = await SharedPreferences.getInstance();
-    bool userProfile = sharedPrefInstance.getBool(k_UserProfileExists) ?? false;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  /// Set remember me and user id to SharedPreference
+  Future<void> setUserPreference() async {
+    try {
+      var sharedPrefInstance = await SharedPreferences.getInstance();
+      sharedPrefInstance.setBool(k_RememberMe, _rememberMe);
+      sharedPrefInstance.setString(k_UserId, _text.text);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -68,16 +68,20 @@ class _LoginState extends State<Login> {
                     'Email',
                     style: k_LabelTextStyle,
                   ),
-                  TextField(
-                      controller: _text,
-                      style: k_CommonTextStyle,
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                      decoration: InputDecoration(
-                          border: UnderlineInputBorder(),
-                          errorText: _validate ? null : 'Invalid email id',
-                          hintText: 'Enter your email id',
-                          hintStyle: TextStyle(fontSize: 15))),
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusNodeUserId,
+                    child: TextField(
+                        controller: _text,
+                        focusNode: _focusNodeUserId,
+                        style: k_CommonTextStyle,
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                        decoration: InputDecoration(
+                            border: UnderlineInputBorder(),
+                            errorText: _validate ? null : 'Invalid email id',
+                            hintText: 'Enter your email id',
+                            hintStyle: TextStyle(fontSize: 15))),
+                  ),
                   SizedBox(
                     height: 25,
                   ),
@@ -85,19 +89,27 @@ class _LoginState extends State<Login> {
                     'Password',
                     style: k_LabelTextStyle,
                   ),
-                  TextField(
-                      controller: _pwd,
-                      style: k_CommonTextStyle,
-                      obscureText: true,
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                      decoration: InputDecoration(
-                          errorText: _pwdValidate
-                              ? null
-                              : 'Password must be more than 5 characters',
-                          border: UnderlineInputBorder(),
-                          hintText: 'Enter your password',
-                          hintStyle: TextStyle(fontSize: 15))),
+                  EnsureVisibleWhenFocused(
+                    focusNode: _focusNodePassword,
+                    child: TextField(
+                        controller: _pwd,
+                        focusNode: _focusNodePassword,
+                        style: k_CommonTextStyle,
+                        obscureText: true,
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) {
+                          _focusNodePassword.unfocus();
+                          FocusScope.of(context)
+                              .requestFocus(_focusLoginButton);
+                        },
+                        decoration: InputDecoration(
+                            errorText: _pwdValidate
+                                ? null
+                                : 'Password must be more than 5 characters',
+                            border: UnderlineInputBorder(),
+                            hintText: 'Enter your password',
+                            hintStyle: TextStyle(fontSize: 15))),
+                  ),
                   SizedBox(
                     height: 25,
                   ),
@@ -118,6 +130,7 @@ class _LoginState extends State<Login> {
                     height: 25,
                   ),
                   RaisedButton(
+                    focusNode: _focusLoginButton,
                     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
                     color: Theme.of(context).accentColor,
                     elevation: 10,
@@ -135,7 +148,7 @@ class _LoginState extends State<Login> {
                       });
 
                       if (_validate && _pwdValidate) {
-                        bool validateCreds;
+                        bool validateCreds = false;
                         try {
                           validateCreds = await _auth.validateUserCredentials(
                               _text.text, _pwd.text);
@@ -143,11 +156,9 @@ class _LoginState extends State<Login> {
                           print(e.toString());
                         }
                         if (validateCreds) {
-                          print('Success Login');
-                          await setUserPreference(_rememberMe);
-                          Navigator.of(context).pushNamed(USER_INFORMATION);
+                          await setUserPreference();
+                          Navigator.of(context).pushNamed(HOME);
                         } else {
-                          print('Failed Login');
                           alertDialog = new AlertDialogs(
                               title: 'Authentication Failed',
                               message:
@@ -165,9 +176,12 @@ class _LoginState extends State<Login> {
                                   message: 'You have been registered with us');
                               await alertDialog.asyncAckAlert(context);
 
-                              await setUserPreference(_rememberMe);
+                              await setUserPreference();
 
-                              Navigator.of(context).pushReplacementNamed(HOME);
+                              ///                           Navigate to User Info only in case of user
+                              ///                           registration else redirect to Home Page
+                              Navigator.of(context)
+                                  .pushReplacementNamed(USER_INFORMATION);
                             } else {
                               alertDialog = new AlertDialogs(
                                   title: 'Failure',

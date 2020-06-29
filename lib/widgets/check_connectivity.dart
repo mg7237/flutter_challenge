@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Widget to be displayed when there is no internet connectivity
 class NoInternet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

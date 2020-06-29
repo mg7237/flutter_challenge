@@ -12,17 +12,23 @@ class _RouteAppOnLaunchState extends State<RouteAppOnLaunch> {
   bool show = true;
   Widget navigateTo;
 
-  void navigationPage() async {
-    var sharedPrefInstance = await SharedPreferences.getInstance();
-    bool rememberMe = sharedPrefInstance.getBool(k_RememberMe) ?? false;
+  ///   Read shared preferences to check for Remember Me value and navigate
+  ///   to Login or Home screen
 
-    print(rememberMe);
-    if (rememberMe) {
-      Navigator.of(context).pushReplacementNamed(HOME);
-    } else {
-      Navigator.of(context).pushReplacementNamed(LOGIN);
+  void navigationPage() async {
+    try {
+      var sharedPrefInstance = await SharedPreferences.getInstance();
+      bool rememberMe = sharedPrefInstance.getBool(k_RememberMe) ?? false;
+
+      if (rememberMe) {
+        Navigator.of(context).pushReplacementNamed(HOME);
+      } else {
+        Navigator.of(context).pushReplacementNamed(LOGIN);
+      }
+      show = false;
+    } catch (e) {
+      print(e.toString());
     }
-    show = false;
   }
 
   @override

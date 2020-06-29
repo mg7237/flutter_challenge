@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// Utility class to manage Firebase authorization related functions such as
+/// create user / modify password / authenticate user
+
 class FireBaseOps {
-  //final GoogleSignIn _googleSignIn = GoogleSignIn();
+  //Todo: Google, FB SignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<bool> validateUserCredentials(String email, String password) async {

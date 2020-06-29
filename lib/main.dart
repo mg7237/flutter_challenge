@@ -8,12 +8,11 @@ import 'package:connectivity/connectivity.dart';
 import 'widgets/check_connectivity.dart';
 import 'widgets/route_app_launch.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:mgflutter/screens/UserInfo.dart';
+import 'package:mgflutter/screens/user_info.dart';
 
-/*  Application startup page; performs following functions
-    a) Define routes to login page & home pages
-    b) Subscribes to internet connectivity stream which is used to show connectivity error page when the device loses internet connection
-*/
+///  Application startup page; performs following functions
+//    a) Define routes to login page & home pages
+//    b) Subscribes to internet connectivity stream which is used to show connectivity error page when the device loses internet connection
 
 void main() {
   runApp(MyApp());
@@ -31,6 +30,10 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
+    ///  Listening to connectivity stream. Based on Connectivity status
+    ///  overlay for no internet connection is shown or hidden
+
     internetConnection = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
