@@ -91,6 +91,7 @@ class _UserInfoState extends State<UserInfo> {
       return userProfile;
     } catch (e) {
       print(e.toString());
+      return null;
     }
   }
 

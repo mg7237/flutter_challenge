@@ -2,7 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 import 'dart:io';
 
-/// File storage / retrieval / delete of files at Fiebase Storage cloud
+/// File storage / retrieval / delete of image files at Firebase Storage cloud
 class FirebaseImageOps {
   File _file;
   String _user;

@@ -16,3 +16,4 @@ const k_UserProfileExists = 'UserProfileExists';
 const LOGIN = '/Login';
 const HOME = '/Home';
 const USER_INFORMATION = '/UserInfo';
+const CHANGE_PWD = '/ChangePwd';

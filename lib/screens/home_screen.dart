@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:mgflutter/screens/challenges_home.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:mgflutter/screens/reference_material.dart';
 import 'package:mgflutter/util/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatelessWidget {
+  Future<void> sendMail() async {
+    print("send");
+    final Email email = Email(
+      body: "",
+      subject: "Flutter Challenges - Query",
+      recipients: ["mg7237@gmail.com"],
+      isHTML: false,
+    );
+
+    String platformResponse;
+
+    try {
+      await FlutterEmailSender.send(email);
+      platformResponse = 'success';
+      print("success email");
+    } catch (error) {
+      platformResponse = error.toString();
+      print("error email");
+      print(platformResponse);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,89 +39,121 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Drawer Header'),
-              decoration: BoxDecoration(
-                color: Colors.blue,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                        child: Text(
+                          "Manish Gupta",
+                          style: TextStyle(fontSize: 24, color: Colors.white),
+                        ),
+                        margin: EdgeInsets.only(top: 10),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "manish.gupta@gmail.com",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                  ),
+                  CircleAvatar(
+                      child: Text("MG"),
+                      backgroundColor: Colors.lightBlueAccent,
+                      radius: 45)
+                ],
               ),
+              decoration: BoxDecoration(color: Colors.blue),
             ),
             ListTile(
-              title: Text('Item 1'),
+              title: Text('Subscription Plan - Free / Upgrade / Donate'),
               onTap: () {
                 // Update the state of the app.
                 // ...
               },
             ),
             ListTile(
-                title: Text('Item 2'),
+                title: Text('View / Update your profile'),
+                onTap: () => Navigator.of(context)
+                    .pushReplacementNamed(USER_INFORMATION)),
+            ListTile(
+                title: Text('Change Password'),
                 onTap: () => Navigator.of(context)
                     .pushReplacementNamed(USER_INFORMATION)),
           ],
         ),
       ),
       body: Container(
-        color: k_GreyColor,
+        color: Colors.white,
         height: MediaQuery.of(context).size.height,
         child: ListView(
           children: <Widget>[
-            Container(
+            Card(
+              elevation: 10,
+              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Container(
+                //margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: const Radius.circular(40.0),
+                      topRight: const Radius.circular(40.0),
+                    )),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 140,
+                      height: 75,
+                      child: Image.asset(
+                        'images/MG_Logo.png',
+                      ),
+                    ),
+                    SizedBox(
+                      width: 140,
+                      child: Image.asset(
+                        'images/flutter_logo.png',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              elevation: 10,
               margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: const Radius.circular(40.0),
-                    topRight: const Radius.circular(40.0),
-                  )),
-              child: Row(
+              child: Column(
                 children: [
-                  SizedBox(
-                    width: 140,
-                    height: 75,
-                    child: Image.asset(
-                      'images/MG_Logo.png',
+                  Container(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    color: Colors.white,
+                    child: Text(
+                      'Welcome to Manish\'s Flutter Challenge Implementation',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Color(0xff757575),
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
-                  SizedBox(
-                    width: 140,
-                    child: Image.asset(
-                      'images/flutter_logo.png',
-                    ),
-                  ),
+                  Container(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      color: Colors.white,
+                      height: 100,
+                      width: double.infinity,
+                      child: Image.asset('images/Start-Logo-FINAL-01.jpg')),
                 ],
               ),
             ),
             Container(
-              margin: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-              color: Colors.white,
-              child: Text(
-                'Welcome to Manish\'s Flutter Challenge Implementation',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Color(0xff757575),
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Container(
-                margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                color: Colors.white,
-                height: 100,
-                width: double.infinity,
-                child: FlatButton(
-                    child: Image.asset('images/Start-Logo-FINAL-01.jpg'),
-                    onPressed: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChallengesHome()),
-                        ))),
-            Container(
               margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
               height: 500,
               width: double.infinity,
-              decoration: BoxDecoration(color: k_GreyColor),
               child: ListView(
                 padding: EdgeInsets.all(10),
                 children: <Widget>[
@@ -107,8 +162,6 @@ class HomeScreen extends StatelessWidget {
                     height: 60,
                     child: Card(
                       elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
                       margin: EdgeInsets.all(0),
                       child: FlatButton(
                         child: Row(
@@ -120,7 +173,7 @@ class HomeScreen extends StatelessWidget {
                             SizedBox(
                               width: 10,
                             ),
-                            Text('Flutter Reference - Articles',
+                            Text('Flutter Reference Material',
                                 style: k_CommonTextStyle),
                             Expanded(
                                 child: Container(
@@ -130,7 +183,10 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         onPressed: () {
-                          // ToDO: Add code for on pressed
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ContentView()));
                         },
                       ),
                     ),
@@ -143,41 +199,6 @@ class HomeScreen extends StatelessWidget {
                     height: 60,
                     child: Card(
                       elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
-                      margin: EdgeInsets.all(0),
-                      child: FlatButton(
-                        child: Row(
-                          children: <Widget>[
-                            FaIcon(FontAwesomeIcons.youtube),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Text('Flutter Reference - Videos',
-                                style: k_CommonTextStyle),
-                            Expanded(
-                                child: Container(
-                              child: Icon(Icons.keyboard_arrow_right),
-                              alignment: Alignment.centerRight,
-                            )),
-                          ],
-                        ),
-                        onPressed: () {
-                          // ToDO: Add code for on pressed
-                        },
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 60,
-                    child: Card(
-                      elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
                       margin: EdgeInsets.all(0),
                       child: FlatButton(
                         child: Row(
@@ -194,9 +215,7 @@ class HomeScreen extends StatelessWidget {
                             )),
                           ],
                         ),
-                        onPressed: () {
-                          // ToDO: Add code for on pressed
-                        },
+                        onPressed: () => sendMail(),
                       ),
                     ),
                   ),
@@ -208,8 +227,6 @@ class HomeScreen extends StatelessWidget {
                     height: 60,
                     child: Card(
                       elevation: 10,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10.0)),
                       margin: EdgeInsets.all(0),
                       child: FlatButton(
                         child: Row(

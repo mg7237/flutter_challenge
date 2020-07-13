@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mgflutter/screens/login.dart';
@@ -70,6 +69,8 @@ class _MyAppState extends State<MyApp> {
             LOGIN: (BuildContext context) => Login(),
             HOME: (BuildContext context) => HomeScreen(),
             USER_INFORMATION: (BuildContext context) => UserInfo(),
+            CHANGE_PWD: (BuildContext context) =>
+                UserInfo() // ToDo: Create Change Pwd and link here
           }),
     );
   }
