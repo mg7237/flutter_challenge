@@ -28,6 +28,7 @@ dependencies:
   cached_network_image: ^2.2.0+1
   validators: ^2.0.0
   flutter_email_sender: ^3.0.1
+  flutter_webview_plugin: ^0.3.11
 
 
 dev_dependencies:

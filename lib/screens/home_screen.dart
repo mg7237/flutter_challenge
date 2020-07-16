@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:mgflutter/screens/about_me.dart';
 import 'package:mgflutter/screens/reference_material.dart';
 import 'package:mgflutter/util/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -95,16 +96,9 @@ class HomeScreen extends StatelessWidget {
           children: <Widget>[
             Card(
               elevation: 10,
-              margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
+              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Container(
-                //margin: EdgeInsets.fromLTRB(20, 10, 20, 0),
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: const Radius.circular(40.0),
-                      topRight: const Radius.circular(40.0),
-                    )),
                 child: Row(
                   children: [
                     SizedBox(
@@ -244,7 +238,10 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         onPressed: () {
-                          // ToDO: Add code for on pressed
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AboutMe()));
                         },
                       ),
                     ),

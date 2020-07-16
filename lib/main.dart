@@ -55,8 +55,8 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return OverlaySupport(
       child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'MG Flutter Challenge Portfolio',
-          //debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primaryColor: Color(0xff427BFF),
             accentColor: Color(0xffDC3545),
