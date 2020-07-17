@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
-class AboutMe extends StatelessWidget {
+class PrivacyPolicy extends StatelessWidget {
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
 
   @override
@@ -13,9 +13,9 @@ class AboutMe extends StatelessWidget {
       ),
       routes: {
         '/': (_) => new WebviewScaffold(
-              url: "https://mg7237.github.io/mycv/",
+              url: "https://mg7237.github.io/mycv/privacy.html",
               appBar: new AppBar(
-                title: const Text('About Me'),
+                title: const Text('Privacy Policy'),
                 leading: IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () => Navigator.of(context).pop(),

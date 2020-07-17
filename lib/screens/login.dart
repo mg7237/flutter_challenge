@@ -6,6 +6,7 @@ import 'package:mgflutter/util/constants.dart';
 import 'package:mgflutter/util/firebase_auth.dart';
 import 'package:mgflutter/util/alert_dialog.dart';
 import 'package:mgflutter/widgets/ensure_visible_when_focused.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// Login page uses FireStore Authentication (user/password)
 /// to create & authenticate users
@@ -114,20 +115,33 @@ class _LoginState extends State<Login> {
                     height: 25,
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Remember Me?'),
-                      Checkbox(
-                        tristate: false,
-                        value: _rememberMe,
-                        onChanged: (newValue) {
-                          _rememberMe = newValue;
-                          setState(() {});
-                        },
+                      Row(
+                        children: [
+                          Text('Remember Me?', style: TextStyle(fontSize: 18)),
+                          Checkbox(
+                            tristate: false,
+                            value: _rememberMe,
+                            onChanged: (newValue) {
+                              _rememberMe = newValue;
+                              setState(() {});
+                            },
+                          ),
+                        ],
                       ),
+                      InkWell(
+                        child: Text(
+                          "Skip   ",
+                          style:
+                              TextStyle(color: Colors.blueAccent, fontSize: 18),
+                        ),
+                        onTap: () => Navigator.pushNamed(context, HOME),
+                      )
                     ],
                   ),
                   SizedBox(
-                    height: 25,
+                    height: 18,
                   ),
                   RaisedButton(
                     focusNode: _focusLoginButton,
@@ -137,7 +151,7 @@ class _LoginState extends State<Login> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
                     child: Text(
-                      'Login / Create Profile',
+                      'Login / Sign Up',
                       style: TextStyle(fontSize: 20),
                     ),
                     textColor: Colors.white,
@@ -192,9 +206,50 @@ class _LoginState extends State<Login> {
                         }
                       }
                     },
-                  )
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: InkWell(
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Colors.red, fontSize: 18),
+                        ),
+                        onTap: () async {
+                          _validate = EmailValidator.validate(_text.text);
+                          if (_validate) {
+                            try {
+                              final FirebaseAuth _auth = FirebaseAuth.instance;
+                              _auth
+                                  .sendPasswordResetEmail(email: _text.text)
+                                  .then((value) async {
+                                alertDialog = new AlertDialogs(
+                                    title: 'Success',
+                                    message:
+                                        'Password reset email has been sent to your mail id. Please check and change password');
+                                await alertDialog.asyncAckAlert(context);
+                              }).catchError((onError) async {
+                                alertDialog = new AlertDialogs(
+                                    title: 'Failure',
+                                    message:
+                                        'Password change request failed. Please check the email entered and try again.');
+                                await alertDialog.asyncAckAlert(context);
+                              });
+                            } catch (e) {
+                              alertDialog = new AlertDialogs(
+                                  title: 'Failure',
+                                  message:
+                                      'Password change request failed. Please check the email entered and try again.');
+                              await alertDialog.asyncAckAlert(context);
+                            }
+//        .catchError(onError) {
+//                            print("err");
+//    });
 
-                  // EmailValidator.validate(email)
+                          }
+                        }),
+                  ),
                 ]))
           ]),
         ),

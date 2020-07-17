@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:mgflutter/screens/about_me.dart';
 import 'package:mgflutter/screens/reference_material.dart';
 import 'package:mgflutter/util/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mgflutter/widgets/privacy_policy.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatelessWidget {
   Future<void> sendMail() async {
@@ -72,20 +73,24 @@ class HomeScreen extends StatelessWidget {
               decoration: BoxDecoration(color: Colors.blue),
             ),
             ListTile(
-              title: Text('Subscription Plan - Free / Upgrade / Donate'),
-              onTap: () {
-                // Update the state of the app.
-                // ...
-              },
-            ),
-            ListTile(
                 title: Text('View / Update your profile'),
                 onTap: () => Navigator.of(context)
                     .pushReplacementNamed(USER_INFORMATION)),
             ListTile(
-                title: Text('Change Password'),
-                onTap: () => Navigator.of(context)
-                    .pushReplacementNamed(USER_INFORMATION)),
+                title: Text('Privacy Policy'),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PrivacyPolicy()))),
+            ListTile(
+              title: Text('APP Source Code'),
+              onTap: () async {
+                const url = 'https://github.com/mg7237/mycv';
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  print('Could not launch $url');
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -237,11 +242,14 @@ class HomeScreen extends StatelessWidget {
                             )),
                           ],
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AboutMe()));
+                        onPressed: () async {
+                          const url =
+                              'https://mg7237.github.io/mycv/privacy.html';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            print('Could not launch $url');
+                          }
                         },
                       ),
                     ),
