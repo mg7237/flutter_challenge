@@ -248,7 +248,7 @@ class HomeScreen extends StatelessWidget {
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
-                            print('Could not launch $url');
+                            print('Could not - launch $url');
                           }
                         },
                       ),
