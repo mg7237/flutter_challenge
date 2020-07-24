@@ -5,8 +5,13 @@ import 'package:mgflutter/util/constants.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mgflutter/widgets/privacy_policy.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:mgflutter/widgets/drawer_profile.dart';
+import 'challenges_start.dart';
 
 class HomeScreen extends StatelessWidget {
+  bool loggedIn;
+  HomeScreen({this.loggedIn});
+
   Future<void> sendMail() async {
     print("send");
     final Email email = Email(
@@ -41,49 +46,48 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    children: [
-                      Container(
-                        child: Text(
-                          "Manish Gupta",
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                        margin: EdgeInsets.only(top: 10),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        "manish.gupta@gmail.com",
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ],
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                  ),
-                  CircleAvatar(
-                      child: Text("MG"),
-                      backgroundColor: Colors.lightBlueAccent,
-                      radius: 45)
-                ],
-              ),
+              child: DrawerProfile(),
               decoration: BoxDecoration(color: Colors.blue),
             ),
             ListTile(
-                title: Text('View / Update your profile'),
-                onTap: () => Navigator.of(context)
-                    .pushReplacementNamed(USER_INFORMATION)),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'View / Update Profile',
+                      style: k_CommonTextStyle,
+                    ),
+                    Icon(
+                      Icons.person,
+                      size: 20,
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  if (loggedIn) {
+                    Navigator.of(context)
+                        .pushReplacementNamed(USER_INFORMATION);
+                  } else {
+                    Navigator.of(context).pushReplacementNamed(LOGIN);
+                  }
+                }),
             ListTile(
-                title: Text('Privacy Policy'),
-                onTap: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => PrivacyPolicy()))),
-            ListTile(
-              title: Text('APP Source Code'),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'APP Source Code',
+                    style: k_CommonTextStyle,
+                  ),
+                  Icon(
+                    Icons.code,
+                    size: 20,
+                  ),
+                ],
+              ),
               onTap: () async {
-                const url = 'https://github.com/mg7237/mycv';
+                const url =
+                    'https://github.com/mg7237/flutter_knowledge_portfolio_1';
                 if (await canLaunch(url)) {
                   await launch(url);
                 } else {
@@ -91,6 +95,22 @@ class HomeScreen extends StatelessWidget {
                 }
               },
             ),
+            ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Privacy Policy',
+                      style: k_CommonTextStyle,
+                    ),
+                    Icon(
+                      Icons.open_in_new,
+                      size: 20,
+                    ),
+                  ],
+                ),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PrivacyPolicy()))),
           ],
         ),
       ),
@@ -145,7 +165,12 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.white,
                       height: 100,
                       width: double.infinity,
-                      child: Image.asset('images/Start-Logo-FINAL-01.jpg')),
+                      child: InkWell(
+                          child: Image.asset('images/Start-Logo-FINAL-01.jpg'),
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChallengesStart())))),
                 ],
               ),
             ),

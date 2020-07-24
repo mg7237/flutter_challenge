@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:mgflutter/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:mgflutter/util/constants.dart';
@@ -136,7 +137,12 @@ class _LoginState extends State<Login> {
                           style:
                               TextStyle(color: Colors.blueAccent, fontSize: 18),
                         ),
-                        onTap: () => Navigator.pushNamed(context, HOME),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen(
+                                      loggedIn: false,
+                                    ))),
                       )
                     ],
                   ),
@@ -171,7 +177,12 @@ class _LoginState extends State<Login> {
                         }
                         if (validateCreds) {
                           await setUserPreference();
-                          Navigator.of(context).pushNamed(HOME);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => HomeScreen(
+                                        loggedIn: true,
+                                      )));
                         } else {
                           alertDialog = new AlertDialogs(
                               title: 'Authentication Failed',

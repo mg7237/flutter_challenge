@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Reusable UI styles across applications
 const Color k_GreyColor = Color(0xffeeeeee);
 const TextStyle k_CommonTextStyle =
-    TextStyle(color: Color(0xff757575), fontSize: 16);
+    TextStyle(color: Colors.black, fontSize: 16);
 
 const TextStyle k_LabelTextStyle = TextStyle(color: Colors.black, fontSize: 20);
 

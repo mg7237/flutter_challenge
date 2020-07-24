@@ -30,6 +30,9 @@ dependencies:
   flutter_email_sender: ^3.0.1
   flutter_webview_plugin: ^0.3.11
   url_launcher: ^5.5.0
+  provider: ^4.3.1
+  fl_chart: ^0.10.1
+
 
 
 dev_dependencies:
