@@ -1,12 +1,12 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
-class Charts extends StatefulWidget {
+class LineChart1 extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => ChartsState();
+  State<StatefulWidget> createState() => LineChart1State();
 }
 
-class ChartsState extends State<Charts> {
+class LineChart1State extends State<LineChart1> {
   bool isShowingMainData;
 
   @override
@@ -18,14 +18,14 @@ class ChartsState extends State<Charts> {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 1.23,
+      aspectRatio: 0.9,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(18)),
           gradient: LinearGradient(
             colors: const [
-              Color(0xff2c274c),
-              Color(0xff46426c),
+              Color(0xffE6DADA),
+              Color(0xff274046),
             ],
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
@@ -37,24 +37,13 @@ class ChartsState extends State<Charts> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 const SizedBox(
-                  height: 37,
+                  height: 40,
                 ),
                 const Text(
-                  'Unfold Shop 2018',
-                  style: TextStyle(
-                    color: Color(0xff827daa),
-                    fontSize: 16,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 4,
-                ),
-                const Text(
-                  'Monthly Sales',
+                  'Monthly Profit/Loss 2019',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 32,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2),
                   textAlign: TextAlign.center,
@@ -67,7 +56,7 @@ class ChartsState extends State<Charts> {
                     padding: const EdgeInsets.only(right: 16.0, left: 6.0),
                     child: LineChart(
                       isShowingMainData ? sampleData1() : sampleData2(),
-                      swapAnimationDuration: const Duration(milliseconds: 250),
+                      swapAnimationDuration: const Duration(milliseconds: 500),
                     ),
                   ),
                 ),
@@ -103,26 +92,51 @@ class ChartsState extends State<Charts> {
         handleBuiltInTouches: true,
       ),
       gridData: FlGridData(
-        show: false,
+        show: true,
+        drawHorizontalLine: true,
+        getDrawingHorizontalLine: (value) {
+          return FlLine(
+            color: const Color(0xff37434d),
+            strokeWidth: 1,
+          );
+        },
       ),
       titlesData: FlTitlesData(
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 22,
           textStyle: const TextStyle(
-            color: Color(0xff72719b),
+            color: Colors.black,
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 12,
           ),
-          margin: 10,
+          margin: 8,
           getTitles: (value) {
             switch (value.toInt()) {
+              case 1:
+                return 'J';
               case 2:
-                return 'SEPT';
+                return 'F';
+              case 3:
+                return 'M';
+              case 4:
+                return 'A';
+              case 5:
+                return 'M';
+              case 6:
+                return 'J';
               case 7:
-                return 'OCT';
+                return 'J';
+              case 8:
+                return 'A';
+              case 9:
+                return 'S';
+              case 10:
+                return 'O';
+              case 11:
+                return 'N';
               case 12:
-                return 'DEC';
+                return 'D';
             }
             return '';
           },
@@ -130,9 +144,9 @@ class ChartsState extends State<Charts> {
         leftTitles: SideTitles(
           showTitles: true,
           textStyle: const TextStyle(
-            color: Color(0xff75729e),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 10,
           ),
           getTitles: (value) {
             switch (value.toInt()) {
@@ -143,7 +157,15 @@ class ChartsState extends State<Charts> {
               case 3:
                 return '3m';
               case 4:
+                return '4m';
+              case 5:
                 return '5m';
+              case 6:
+                return '6m';
+              case 7:
+                return '7m';
+              case 8:
+                return '8m';
             }
             return '';
           },
@@ -170,29 +192,34 @@ class ChartsState extends State<Charts> {
         ),
       ),
       minX: 0,
-      maxX: 14,
-      maxY: 4,
+      maxX: 12,
+      maxY: 8,
       minY: 0,
-      lineBarsData: linesBarData1(),
+      lineBarsData: linesBarDataIncome(),
     );
   }
 
-  List<LineChartBarData> linesBarData1() {
+  List<LineChartBarData> linesBarDataIncome() {
     final LineChartBarData lineChartBarData1 = LineChartBarData(
       spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 1.5),
-        FlSpot(5, 1.4),
-        FlSpot(7, 3.4),
-        FlSpot(10, 2),
-        FlSpot(12, 2.2),
-        FlSpot(13, 1.8),
+        FlSpot(1, 3.5),
+        FlSpot(2, 4.2),
+        FlSpot(3, 3.7),
+        FlSpot(4, 4.9),
+        FlSpot(5, 5.2),
+        FlSpot(6, 5.9),
+        FlSpot(7, 4.9),
+        FlSpot(8, 6.5),
+        FlSpot(9, 7.0),
+        FlSpot(10, 7.5),
+        FlSpot(11, 7.2),
+        FlSpot(12, 6.8),
       ],
       isCurved: true,
       colors: [
         const Color(0xff4af699),
       ],
-      barWidth: 8,
+      barWidth: 2,
       isStrokeCapRound: true,
       dotData: FlDotData(
         show: false,
@@ -203,18 +230,24 @@ class ChartsState extends State<Charts> {
     );
     final LineChartBarData lineChartBarData2 = LineChartBarData(
       spots: [
-        FlSpot(1, 1),
-        FlSpot(3, 2.8),
-        FlSpot(7, 1.2),
-        FlSpot(10, 2.8),
-        FlSpot(12, 2.6),
-        FlSpot(13, 3.9),
+        FlSpot(1, 1.1),
+        FlSpot(2, 2),
+        FlSpot(3, 0.9),
+        FlSpot(4, 3),
+        FlSpot(5, 2.8),
+        FlSpot(6, 2.5),
+        FlSpot(7, 2),
+        FlSpot(8, 3),
+        FlSpot(9, 3.7),
+        FlSpot(10, 4.5),
+        FlSpot(11, 4.2),
+        FlSpot(12, 3.9),
       ],
       isCurved: true,
       colors: [
         const Color(0xffaa4cfc),
       ],
-      barWidth: 8,
+      barWidth: 2,
       isStrokeCapRound: true,
       dotData: FlDotData(
         show: false,
@@ -226,16 +259,23 @@ class ChartsState extends State<Charts> {
     final LineChartBarData lineChartBarData3 = LineChartBarData(
       spots: [
         FlSpot(1, 2.8),
-        FlSpot(3, 1.9),
-        FlSpot(6, 3),
-        FlSpot(10, 1.3),
-        FlSpot(13, 2.5),
+        FlSpot(2, 2.8),
+        FlSpot(3, 3.2),
+        FlSpot(4, 2.8),
+        FlSpot(5, 2.8),
+        FlSpot(6, 3.5),
+        FlSpot(7, 3.7),
+        FlSpot(8, 4.1),
+        FlSpot(9, 4.3),
+        FlSpot(10, 4.9),
+        FlSpot(11, 4.5),
+        FlSpot(12, 4.5),
       ],
       isCurved: true,
       colors: const [
         Color(0xff27b6fc),
       ],
-      barWidth: 8,
+      barWidth: 2,
       isStrokeCapRound: true,
       dotData: FlDotData(
         show: false,
@@ -257,26 +297,45 @@ class ChartsState extends State<Charts> {
         enabled: false,
       ),
       gridData: FlGridData(
-        show: false,
+        drawHorizontalLine: true,
+        show: true,
       ),
       titlesData: FlTitlesData(
         bottomTitles: SideTitles(
           showTitles: true,
           reservedSize: 22,
           textStyle: const TextStyle(
-            color: Color(0xff72719b),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 12,
           ),
           margin: 10,
           getTitles: (value) {
             switch (value.toInt()) {
+              case 1:
+                return 'J';
               case 2:
-                return 'SEPT';
+                return 'F';
+              case 3:
+                return 'M';
+              case 4:
+                return 'A';
+              case 5:
+                return 'M';
+              case 6:
+                return 'J';
               case 7:
-                return 'OCT';
+                return 'J';
+              case 8:
+                return 'A';
+              case 9:
+                return 'S';
+              case 10:
+                return 'O';
+              case 11:
+                return 'N';
               case 12:
-                return 'DEC';
+                return 'D';
             }
             return '';
           },
@@ -293,13 +352,19 @@ class ChartsState extends State<Charts> {
               case 1:
                 return '1m';
               case 2:
-                return '2m';
+                return '2mm';
               case 3:
                 return '3m';
               case 4:
-                return '5m';
+                return '4m';
               case 5:
+                return '5m';
+              case 6:
                 return '6m';
+              case 7:
+                return '7m';
+              case 8:
+                return '8m';
             }
             return '';
           },
@@ -328,21 +393,27 @@ class ChartsState extends State<Charts> {
       maxX: 14,
       maxY: 6,
       minY: 0,
-      lineBarsData: linesBarData2(),
+      lineBarsData: linesBarDataExpense(),
     );
   }
 
-  List<LineChartBarData> linesBarData2() {
+  List<LineChartBarData> linesBarDataExpense() {
     return [
       LineChartBarData(
         spots: [
-          FlSpot(1, 1),
-          FlSpot(3, 4),
-          FlSpot(5, 1.8),
-          FlSpot(7, 5),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
+          FlSpot(1, 2.2),
+          FlSpot(2, 2.2),
+          FlSpot(3, 2.7),
+          FlSpot(4, 3.2),
+          FlSpot(5, 3.2),
+          FlSpot(6, 4.5),
+          FlSpot(7, 4.2),
+          FlSpot(8, 5.2),
+          FlSpot(9, 5.4),
+          FlSpot(10, 4.8),
+          FlSpot(11, 4.8),
+          FlSpot(12, 5.0),
+          FlSpot(13, 5.2),
         ],
         isCurved: true,
         curveSmoothness: 0,
@@ -361,11 +432,17 @@ class ChartsState extends State<Charts> {
       LineChartBarData(
         spots: [
           FlSpot(1, 1),
+          FlSpot(2, 2.8),
           FlSpot(3, 2.8),
+          FlSpot(4, 2.8),
+          FlSpot(5, 2.8),
+          FlSpot(6, 2.8),
           FlSpot(7, 1.2),
+          FlSpot(8, 2.8),
+          FlSpot(9, 2.8),
           FlSpot(10, 2.8),
+          FlSpot(11, 2.8),
           FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
         ],
         isCurved: true,
         colors: const [
@@ -383,10 +460,17 @@ class ChartsState extends State<Charts> {
       LineChartBarData(
         spots: [
           FlSpot(1, 3.8),
+          FlSpot(2, 1.9),
           FlSpot(3, 1.9),
+          FlSpot(4, 1.9),
+          FlSpot(5, 1.9),
           FlSpot(6, 5),
+          FlSpot(7, 1.9),
+          FlSpot(8, 1.9),
+          FlSpot(9, 1.9),
           FlSpot(10, 3.3),
-          FlSpot(13, 4.5),
+          FlSpot(11, 1.9),
+          FlSpot(12, 4.5),
         ],
         isCurved: true,
         curveSmoothness: 0,

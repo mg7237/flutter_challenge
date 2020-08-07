@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mgflutter/screens/progress_indicators.dart';
 import 'package:mgflutter/util/constants.dart';
-import 'package:mgflutter/screens/charts.dart';
+import 'package:mgflutter/screens/line_chart_page.dart';
+import 'package:mgflutter/screens/bar_chart_page.dart';
+import 'package:mgflutter/screens/pie_chart_page.dart';
+import 'package:mgflutter/screens/scatter_chart_page.dart';
 
 class ChallengesStart extends StatefulWidget {
   @override
@@ -47,6 +50,26 @@ class _ChallengesStartState extends State<ChallengesStart> {
               margin: EdgeInsets.all(10),
               child: ListTile(
                 leading: FaIcon(
+                  FontAwesomeIcons.chartLine,
+                  color: Colors.red,
+                ),
+                trailing: Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 18,
+                ),
+                title: Text(
+                  "Dashboard - Line Charts",
+                  style: k_CommonTextStyle,
+                ),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LineChartPage())),
+              ),
+            ),
+            Card(
+              elevation: 10,
+              margin: EdgeInsets.all(10),
+              child: ListTile(
+                leading: FaIcon(
                   FontAwesomeIcons.chartBar,
                   color: Colors.red,
                 ),
@@ -55,11 +78,53 @@ class _ChallengesStartState extends State<ChallengesStart> {
                   size: 18,
                 ),
                 title: Text(
-                  "Dashboard - Charts",
+                  "Dashboard - Bar Charts",
+                  style: k_CommonTextStyle,
+                ),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => BarChartPage())),
+              ),
+            ),
+            Card(
+              elevation: 10,
+              margin: EdgeInsets.all(10),
+              child: ListTile(
+                leading: FaIcon(
+                  FontAwesomeIcons.chartPie,
+                  color: Colors.red,
+                ),
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 18,
+                ),
+                title: Text(
+                  "Dashboard - Pie Charts",
+                  style: k_CommonTextStyle,
+                ),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PieChartPage())),
+              ),
+            ),
+            Card(
+              elevation: 10,
+              margin: EdgeInsets.all(10),
+              child: ListTile(
+                leading: FaIcon(
+                  FontAwesomeIcons.chartArea,
+                  color: Colors.red,
+                ),
+                trailing: Icon(
+                  Icons.keyboard_arrow_right,
+                  size: 18,
+                ),
+                title: Text(
+                  "Dashboard - Scatter Charts",
                   style: k_CommonTextStyle,
                 ),
                 onTap: () => Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => Charts())),
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ScatterChartPage())),
               ),
             )
           ],
