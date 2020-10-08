@@ -7,6 +7,7 @@ import 'package:mgflutter/screens/line_chart_page.dart';
 import 'package:mgflutter/screens/bar_chart_page.dart';
 import 'package:mgflutter/screens/pie_chart_page.dart';
 import 'package:mgflutter/screens/scatter_chart_page.dart';
+import 'package:mgflutter/screens/implicit_animation.dart';
 
 class ChallengesStart extends StatefulWidget {
   @override
@@ -43,6 +44,26 @@ class _ChallengesStartState extends State<ChallengesStart> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ProgressIndicators())),
+              ),
+            ),
+            Card(
+              elevation: 10,
+              margin: EdgeInsets.all(10),
+              child: ListTile(
+                leading: FaIcon(
+                  FontAwesomeIcons.random,
+                  color: Colors.red,
+                ),
+                trailing: Icon(
+                  Icons.keyboard_arrow_down,
+                  size: 18,
+                ),
+                title: Text(
+                  "Animations - Simple Implicit",
+                  style: k_CommonTextStyle,
+                ),
+                onTap: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => FadeInDemo())),
               ),
             ),
             Card(
