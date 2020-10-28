@@ -59,7 +59,7 @@ class _ChallengesStartState extends State<ChallengesStart> {
                   size: 18,
                 ),
                 title: Text(
-                  "Animations - Simple Implicit",
+                  "Animations - Fade In (Simple Implicit)",
                   style: k_CommonTextStyle,
                 ),
                 onTap: () => Navigator.push(context,
