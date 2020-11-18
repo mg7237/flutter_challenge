@@ -7,10 +7,18 @@ import 'package:mgflutter/widgets/privacy_policy.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:mgflutter/widgets/drawer_profile.dart';
 import 'challenges_start.dart';
+import 'dart:io' as io;
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   bool loggedIn;
   HomeScreen({this.loggedIn});
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isAvailable = false;
 
   Future<void> sendMail() async {
     print("send");
@@ -32,6 +40,23 @@ class HomeScreen extends StatelessWidget {
       print("error email");
       print(platformResponse);
     }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    exists();
+  }
+
+  void exists() async {
+    _isAvailable = await io.File(
+            "/data/user/0/com.manishgupta.mgflutter/app_flutter/file_example.pdf")
+        .exists();
+    io.File("").create();
+    setState(() {
+      print("Async $_isAvailable");
+    });
   }
 
   @override
@@ -64,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  if (loggedIn) {
+                  if (widget.loggedIn) {
                     Navigator.of(context)
                         .pushReplacementNamed(USER_INFORMATION);
                   } else {
@@ -268,8 +293,7 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                         onPressed: () async {
-                          const url =
-                              'https://mg7237.github.io/mycv/privacy.html';
+                          const url = 'https://mg7237.github.io/manish/';
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -278,9 +302,6 @@ class HomeScreen extends StatelessWidget {
                         },
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
                   ),
                 ],
               ),

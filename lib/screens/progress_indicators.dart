@@ -13,8 +13,8 @@ class _ProgressIndicatorsState extends State<ProgressIndicators> {
   double _progress;
   bool _validateFile = true;
   String _initFileURL =
-      "https://file-examples-com.github.io/uploads/2017/04/file_example_MP4_640_3MG.mp4";
-  String _initFileName = "file_example.mp4";
+      "https://file-examples-com.github.io/uploads/2017/10/file-example_PDF_500_kB.pdf";
+  String _initFileName = "file_example.pdf";
 
   /// Sample file
 

@@ -25,6 +25,7 @@ class _LoginState extends State<Login> {
   bool _rememberMe = false;
   final FireBaseOps _auth = new FireBaseOps();
   AlertDialogs alertDialog;
+  AlertDialogs asyncAckAlert;
   String userResponse;
   FocusNode _focusNodeUserId = FocusNode();
   FocusNode _focusNodePassword = FocusNode();
